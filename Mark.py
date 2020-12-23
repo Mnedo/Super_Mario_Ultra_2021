@@ -37,6 +37,7 @@ class Mario(pygame.sprite.Sprite):
         self.y_jump = 0
         self.k_jump = 0
         self.gr = []
+        self.zn = False
 
     def set_walls(self, *gr):
         self.gr = gr
@@ -65,7 +66,7 @@ class Mario(pygame.sprite.Sprite):
         self.vekt = x
         if x == 1:
             if self.vekt != 0:
-                if self.x + 7 <= 700:
+                if self.x + 7 <= 640:
                     self.x += 7
             if self.xod % 2 == 1:
                 self.image = Mario.image_run1_r
@@ -80,8 +81,8 @@ class Mario(pygame.sprite.Sprite):
                 self.image = Mario.image_run2_l
 
     def jump(self):
-        if self.y_jump - 180 <= self.y and self.k_jump == 1 and self.y - 10 >= 0:
-            self.y -= 10
+        if self.y_jump - 180 <= self.y and self.k_jump == 1 and self.y - 10 >= 0 and not self.zn:
+            self.y -= 15
             if self.vekt == -1:
                 self.image = Mario.image_jump_l
             else:
@@ -89,13 +90,23 @@ class Mario(pygame.sprite.Sprite):
         else:
             self.k_jump = 0
             if self.y <= self.y_jump: # and not pygame.sprite.spritecollideany(self, self.gr):
-                if self.y + 10 <= 700:
-                    self.y += 10
-                if self.vekt == -1:
-                    self.image = Mario.image_jump_l
+                if self.y + 15 <= 630:
+                    self.y += 15
+                    if self.vekt == -1:
+                        self.image = Mario.image_jump_l
+                    else:
+                        self.image = Mario.image_jump_r
                 else:
-                    self.image = Mario.image_jump_r
+                    self.zn = False
+                    self.jumping = False
+                    # self.moving = False
+                    if self.vekt == -1:
+                        self.image = Mario.image_stay_l
+                    else:
+                        self.image = Mario.image_stay_r
+
             else:
+                self.zn = False
                 self.jumping = False
                 #self.moving = False
                 if self.vekt == -1:

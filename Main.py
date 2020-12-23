@@ -38,6 +38,9 @@ while running:
                 if not mario.jumping:
                     mario.vekt = 1
                     mario.set_moving()
+            elif event.key == pygame.K_DOWN:
+                if mario.jumping:
+                    mario.zn = True
         if event.type == pygame.KEYUP and event.key != pygame.K_SPACE:
             if mario.moving:
                 mario.set_moving()
