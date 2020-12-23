@@ -16,28 +16,37 @@ screen = pygame.display.set_mode(size)
 screen.fill(pygame.Color('black'))
 running = True
 clock = pygame.time.Clock()
-mario = Mario()
+all_sprites = pygame.sprite.Group()
+mario_sprites = pygame.sprite.Group()
+earth = pygame.sprite.Group()
+mario = Mario(20, 550, all_sprites)
+mario.set_walls(earth)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
             break
-            pygame.quit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                mario.jump()
-                mario.set_jump()
-            if event.key == pygame.K_LEFT:
-                mario.x_move('left')
-            if event.key == pygame.K_RIGHT:
-                mario.x_move('right')
+                mario.start_jump()
+                #mario.set_moving()
+            elif event.key == pygame.K_LEFT:
+                if not mario.jumping:
+                    mario.vekt = -1
+                    mario.set_moving()
+            elif event.key == pygame.K_RIGHT:
+                if not mario.jumping:
+                    mario.vekt = 1
+                    mario.set_moving()
         if event.type == pygame.KEYUP and event.key != pygame.K_SPACE:
-            mario.x_moving = False
+            if mario.moving:
+                mario.set_moving()
+
     screen.fill((0, 0, 0))
-    # rendering()
-    mario.render(pygame, screen)
-    if mario.is_move():
-        pass
-        # render доски возможно
-        clock.tick(18)
+    #if mario.have_to_move_earth(width):
+    #   render platfrmm
+    all_sprites.update()
+    all_sprites.draw(screen)
+
+    clock.tick(30)
     pygame.display.flip()

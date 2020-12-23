@@ -1,52 +1,133 @@
-class Mario:
-    def __init__(self):
-        self.x_pos = 15
-        self.y_pos = 500
-        self.y_stage = 0
-        self.is_jumping = False
-        self.moving = False
-        self.x_moving = False
-        self.vekt = 'pass'
-        self.y_pos_jump = [10, 20, 30, 40, 50, -10, -20, -30, -40, -50]
+import pygame, os, sys
 
-    def x_move(self, vekt):
-        self.x_moving = True
-        self.vekt = vekt
-        self.movement(vekt)
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('data', name)
+    # если файл не существует, то выходим
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    return image
+
+
+class Mario(pygame.sprite.Sprite):
+    image_run1_r = load_image("mario_run1_r.png")
+    image_run2_r = load_image("mario_run2_r.png")
+    image_run1_l = load_image("mario_run1_l.png")
+    image_run2_l = load_image("mario_run2_l.png")
+    image_jump_r = load_image("mario_jump_r.png")
+    image_jump_l = load_image("mario_jump_l.png")
+    image_stay_r = load_image("mario_stay_r.png")
+    image_stay_l = load_image("mario_stay_l.png")
+    image_start = load_image("mario_start.png")
+
+    def __init__(self, x, y, *gr):
+        super().__init__(gr)
+        self.image = Mario.image_start
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.x = x
+        self.y = y
+        self.jumping = False
+        self.moving = False
+        self.xod = 0
+        self.vekt = 0
+        self.y_jump = 0
+        self.k_jump = 0
+        self.gr = []
+
+    def set_walls(self, *gr):
+        self.gr = gr
+
+    def update(self):
+        if self.jumping:
+            self.jump()
+            if self.vekt == 1:
+                if self.x + 6 <= 700:
+                    self.x += 6
+            elif self.vekt == -1:
+                if self.x - 6 >= 0:
+                    self.x -= 6
+        elif self.moving:
+            self.move_x(self.vekt)
+        self.rect = self.rect.move(self.x - self.rect.x, self.y - self.rect.y)
+
+    def have_to_move_earth(self, witdh):
+        if self.x >= witdh - 100:
+            return True
+        else:
+            return False
+
+    def move_x(self, x):
+        self.xod += 1
+        self.vekt = x
+        if x == 1:
+            if self.vekt != 0:
+                if self.x + 7 <= 700:
+                    self.x += 7
+            if self.xod % 2 == 1:
+                self.image = Mario.image_run1_r
+            else:
+                self.image = Mario.image_run2_r
+        elif x == -1:
+            if self.x - 7 >= 0:
+                self.x -= 7
+            if self.xod % 2 == 1:
+                self.image = Mario.image_run1_l
+            else:
+                self.image = Mario.image_run2_l
 
     def jump(self):
-        self.y_pos -= self.y_pos_jump[self.y_stage]
-        self.y_stage += 1
-        if self.y_stage == len(self.y_pos_jump):
-            self.y_stage = 0
-            self.is_jumping = False
+        if self.y_jump - 180 <= self.y and self.k_jump == 1 and self.y - 10 >= 0:
+            self.y -= 10
+            if self.vekt == -1:
+                self.image = Mario.image_jump_l
+            else:
+                self.image = Mario.image_jump_r
+        else:
+            self.k_jump = 0
+            if self.y <= self.y_jump: # and not pygame.sprite.spritecollideany(self, self.gr):
+                if self.y + 10 <= 700:
+                    self.y += 10
+                if self.vekt == -1:
+                    self.image = Mario.image_jump_l
+                else:
+                    self.image = Mario.image_jump_r
+            else:
+                self.jumping = False
+                #self.moving = False
+                if self.vekt == -1:
+                    self.image = Mario.image_stay_l
+                else:
+                    self.image = Mario.image_stay_r
 
-    def movement(self, vekt):
-        if self.is_jumping:
-            self.jump()
-            self.moving = True
-        if vekt == 'left':
-            if self.x_pos - 20 >= 0:
-                self.x_pos -= 20
-                self.moving = True
-        elif vekt == 'right':
-            if self.x_pos + 20 <= 550:
-                self.x_pos += 20
-                self.moving = True
-
-    def render(self, pygame, screen):
-        self.movement('pass')
-        if self.x_moving:
-            self.movement(self.vekt)
-        pygame.draw.circle(screen, (255, 0, 0), (self.x_pos, self.y_pos), 20)
-
-    def is_move(self):
+    def set_moving(self):
         if self.moving:
             self.moving = False
-            return True
+            if self.vekt == -1:
+                self.image = Mario.image_stay_l
+            else:
+                self.image = Mario.image_stay_r
+        else:
+            self.moving = True
 
-    def set_jump(self):
-        self.is_jumping = True
+    def start_jump(self):
+        self.y_jump = self.y
+        self.y -= 5
+        if not self.moving:
+            self.vekt = 0
+        self.k_jump = 1
+        self.jumping = True
+
+    def clear(self):
+        self.xod = 0
+        if self.vekt == 1:
+            self.image = Mario.image_stay_r
+        elif self.vekt == -1:
+            self.image = Mario.image_stay_l
+        self.jumping = False
 
 
 """
