@@ -4,14 +4,13 @@ import os
 import sys
 
 
-WIN_WIDTH = 1200
-WIN_HEIGHT = 640
+WIN_WIDTH = 1100
+WIN_HEIGHT = 600
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
-BACKGROUND_COLOR = "#004400"
 
-PLATFORM_WIDTH = 32
-PLATFORM_HEIGHT = 32
-PLATFORM_COLOR = "#FF6262"
+PLATFORM_WIDTH = 30
+PLATFORM_HEIGHT = 30
+PLATFORM_COLOR = pygame.Color("Green")
 
 
 class SecondPlatform(sprite.Sprite):
@@ -23,11 +22,21 @@ class SecondPlatform(sprite.Sprite):
 
 
 class MainPlatform:
+    def load_image(name, colorkey=None):
+        fullname = os.path.join('data', name)
+        # если файл не существует, то выходим
+        if not os.path.isfile(fullname):
+            print(f"Файл с изображением '{fullname}' не найден")
+            sys.exit()
+        image = pygame.image.load(fullname)
+        return image
+
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY)
-    pygame.display.set_caption("Super Mario Boy")
+    pygame.display.set_caption("Super Mario - MishaDashaNarekEdition")
     bg = Surface((WIN_WIDTH, WIN_HEIGHT))
-    bg.fill(Color(BACKGROUND_COLOR))
+    BACKGROUND_COLOR = load_image("Фон.png")
+    bg.blit(BACKGROUND_COLOR, (0, 0))
     running = True
 
     entities = pygame.sprite.Group()  # Все объекты
@@ -35,7 +44,7 @@ class MainPlatform:
     ## entities.add(Персонаж) ТУТ ДОБАВЛЯЕТСЯ ПЕРСОНАЖ
 
     level = [
-        "--------------------------------------",
+        "                                      ",
         "                                      ",
         "                                      ",
         "                                      ",
@@ -55,15 +64,6 @@ class MainPlatform:
         "    ---                               ",
         "                                      ",
         "--------------------------------------"]
-
-    def load_image(name, colorkey=None):
-        fullname = os.path.join('data', name)
-        # если файл не существует, то выходим
-        if not os.path.isfile(fullname):
-            print(f"Файл с изображением '{fullname}' не найден")
-            sys.exit()
-        image = pygame.image.load(fullname)
-        return image
 
     all_sprites = pygame.sprite.Group()
     sprite = pygame.sprite.Sprite()
