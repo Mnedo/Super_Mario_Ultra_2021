@@ -3,12 +3,11 @@ from pygame import *
 import os
 import sys
 
-
-WIN_WIDTH = 1100
+WIN_WIDTH = 1300
 WIN_HEIGHT = 600
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 
-PLATFORM_WIDTH = 30
+PLATFORM_WIDTH = 3000
 PLATFORM_HEIGHT = 30
 PLATFORM_COLOR = pygame.Color("Green")
 
@@ -20,7 +19,7 @@ class SecondPlatform(sprite.Sprite):
         self.image.fill(Color(PLATFORM_COLOR))
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
-
+"""
 class MainPlatform:
     def load_image(name, colorkey=None):
         fullname = os.path.join('data', name)
@@ -43,52 +42,29 @@ class MainPlatform:
     platforms = []  # то, во что мы будем врезаться или опираться (проверка на пересечение с платформой)
     ## entities.add(Персонаж) ТУТ ДОБАВЛЯЕТСЯ ПЕРСОНАЖ
 
-    level = [
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                      ",
-        "                                  ----",
-        "              ----                    ",
-        "                                      ",
-        "                         ----         ",
-        "    ---                               ",
-        "                                      ",
-        "--------------------------------------"]
 
     all_sprites = pygame.sprite.Group()
     sprite = pygame.sprite.Sprite()
 
     screen.blit(bg, (0, 0))
     x = y = 0
-    for row in level:  # вся строка
-        for col in row:  # каждый символ
-            if col == "-":
-                pf = SecondPlatform(x, y)
-                entities.add(pf)
-                platforms.append(pf)
+    for row in range(PLATFORM_WIDTH):  # вся строка
+        pf = SecondPlatform(x, y)
+        entities.add(pf)
+        platforms.append(pf)
 
-            x += PLATFORM_WIDTH  # блоки платформы ставятся на ширине блоков
-        y += PLATFORM_HEIGHT  # то же самое и с высотой
-        x = 0
-    while running:
-        for e in pygame.event.get():
-            if e.type == QUIT:
-                running = False
-        entities.draw(screen)
-        pygame.display.update()
+        x += PLATFORM_WIDTH  # блоки платформы ставятся на ширине блоков
+    y += PLATFORM_HEIGHT  # то же самое и с высотой
+    x = 0
 
 
-
+while running:
+    for e in pygame.event.get():
+        if e.type == QUIT:
+            running = False
+    entities.draw(screen)
+    pygame.display.update()
+"""
 
 """
 Класс главной платформы игры

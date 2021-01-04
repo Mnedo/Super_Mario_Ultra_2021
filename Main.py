@@ -1,6 +1,6 @@
 from Mark import Mario
-from Main_platform import Main_platform, Second_platform
-from Objects import Box, Mob
+from Main_platform import SecondPlatform
+# from Objects import MobOnBox, Mob
 
 """
 Код для проверки классов
@@ -10,8 +10,9 @@ from Objects import Box, Mob
 
 import pygame
 
+
 pygame.init()
-size = width, height = 700, 700
+size = width, height = 700, 600
 screen = pygame.display.set_mode(size)
 screen.fill(pygame.Color('black'))
 running = True
@@ -19,8 +20,11 @@ clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 mario_sprites = pygame.sprite.Group()
 earth = pygame.sprite.Group()
-mario = Mario(20, 550, all_sprites)
-mario.set_walls(earth)
+entities = pygame.sprite.Group()
+mario = Mario(20, 500, all_sprites)
+platform = SecondPlatform(0, 576)
+entities.add(platform)
+mario.set_walls(entities)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -50,6 +54,7 @@ while running:
     #   render platfrmm
     all_sprites.update()
     all_sprites.draw(screen)
+    entities.draw(screen)
 
     clock.tick(30)
     pygame.display.flip()

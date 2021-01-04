@@ -1,3 +1,4 @@
+"""
 import pygame
 import os
 import sys
@@ -134,6 +135,7 @@ while running:
     pygame.display.update()
     clock.tick(260)
 pygame.quit()
+"""
 
 """
 классы объектов
