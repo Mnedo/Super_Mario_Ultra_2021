@@ -56,7 +56,7 @@ class Mario(pygame.sprite.Sprite):
                     self.image = Mario.image_stay_r
         if not pygame.sprite.spritecollideany(self, self.gr) and self.potential == 0:
             self.jumping = True
-            self.y += 10
+            self.y += 15
             self.last_res = True
             if self.vekt == -1:
                 self.image = Mario.image_jump_l
