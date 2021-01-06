@@ -34,85 +34,66 @@ class Mario(pygame.sprite.Sprite):
         self.moving = False
         self.xod = 0
         self.vekt = 0
-        self.y_jump = 0
-        self.k_jump = 0
         self.gr = []
         self.zn = False
+        self.last_res = True
+        self.potential = 0
 
     def set_walls(self, gr):
         self.gr = gr
 
+    def set_group(self, gr):
+        gr.add(self)
 
     def update(self):
-        if self.jumping:
-            self.jump()
-            if self.vekt == 1:
-                if self.x + 6 <= 600:
-                    self.x += 6
-            elif self.vekt == -1:
-                if self.x - 6 >= 0:
-                    self.x -= 6
-        elif self.moving:
+        if self.moving:
             self.move_x(self.vekt)
-        self.rect = self.rect.move(self.x - self.rect.x, self.y - self.rect.y)
-
-    def have_to_move_earth(self, witdh):
-        if self.x >= witdh - 100:
-            return True
         else:
-            return False
+            if not self.jumping:
+                if self.vekt == -1:
+                    self.image = Mario.image_stay_l
+                else:
+                    self.image = Mario.image_stay_r
+        if not pygame.sprite.spritecollideany(self, self.gr) and self.potential == 0:
+            self.jumping = True
+            self.y += 10
+            self.last_res = True
+            if self.vekt == -1:
+                self.image = Mario.image_jump_l
+            else:
+                self.image = Mario.image_jump_r
+        elif self.potential != 0:
+            self.y -= 15
+            self.jumping = True
+            self.potential -= 15
+            if self.vekt == -1:
+                self.image = Mario.image_jump_l
+            else:
+                self.image = Mario.image_jump_r
+        else:
+            self.jumping = False
+            if self.last_res:
+                self.y -= 5
+                self.last_res = False
+        self.rect = self.rect.move(self.x - self.rect.x, self.y - self.rect.y)
 
     def move_x(self, x):
         self.xod += 1
         self.vekt = x
         if x == 1:
             if self.vekt != 0:
-                self.x += 7
+                self.x += 8
             if self.xod % 2 == 1:
                 self.image = Mario.image_run1_r
             else:
                 self.image = Mario.image_run2_r
         elif x == -1:
-            if self.x - 7 >= 0:
-                self.x -= 7
+            if self.x - 8 >= 0:
+                self.x -= 8
             if self.xod % 2 == 1:
                 self.image = Mario.image_run1_l
             else:
                 self.image = Mario.image_run2_l
-
-    def jump(self):
-        if self.y_jump - 180 <= self.y and self.k_jump == 1 and self.y - 10 >= 0 and not self.zn:
-            self.y -= 15
-            if self.vekt == -1:
-                self.image = Mario.image_jump_l
-            else:
-                self.image = Mario.image_jump_r
-        else:
-            self.k_jump = 0
-            if not pygame.sprite.spritecollideany(self, self.gr):
-                if self.y + 15 <= 530:
-                    self.y += 15
-                    if self.vekt == -1:
-                        self.image = Mario.image_jump_l
-                    else:
-                        self.image = Mario.image_jump_r
-                else:
-                    self.zn = False
-                    self.jumping = False
-                    # self.moving = False
-                    if self.vekt == -1:
-                        self.image = Mario.image_stay_l
-                    else:
-                        self.image = Mario.image_stay_r
-
-            else:
-                self.zn = False
-                self.jumping = False
-                #self.moving = False
-                if self.vekt == -1:
-                    self.image = Mario.image_stay_l
-                else:
-                    self.image = Mario.image_stay_r
 
     def set_moving(self):
         if self.moving:
@@ -125,20 +106,10 @@ class Mario(pygame.sprite.Sprite):
             self.moving = True
 
     def start_jump(self):
-        self.y_jump = self.y
-        self.y -= 5
-        if not self.moving:
-            self.vekt = 0
-        self.k_jump = 1
-        self.jumping = True
+        self.potential = 225
 
-    def clear(self):
-        self.xod = 0
-        if self.vekt == 1:
-            self.image = Mario.image_stay_r
-        elif self.vekt == -1:
-            self.image = Mario.image_stay_l
-        self.jumping = False
+    def get_coords(self):
+        return (self.rect.x, self.rect.y + self.rect.w, pygame.mask.from_surface(self.image))
 
 
 """

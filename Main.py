@@ -8,6 +8,23 @@ from Main_platform import SecondPlatform
 В дальнейшем рабочий код
 """
 
+
+class Camera:
+    # зададим начальный сдвиг камеры
+    def __init__(self):
+        self.dx = 0
+        self.dy = 0
+
+    # сдвинуть объект obj на смещение камеры
+    def apply(self, obj):
+        obj.rect.x += self.dx
+        obj.rect.y += self.dy
+
+    # позиционировать камеру на объекте target
+    def update(self, target):
+        self.dx = -(target.rect.x)
+        self.dy = -(target.rect.y)
+
 import pygame
 
 
@@ -22,9 +39,11 @@ mario_sprites = pygame.sprite.Group()
 earth = pygame.sprite.Group()
 entities = pygame.sprite.Group()
 mario = Mario(20, 500, all_sprites)
+camera = Camera()
 platform = SecondPlatform(0, 576)
 entities.add(platform)
 mario.set_walls(entities)
+mario.set_group(mario_sprites)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -33,25 +52,19 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 mario.start_jump()
-                #mario.set_moving()
             elif event.key == pygame.K_LEFT:
-                if not mario.jumping:
-                    mario.vekt = -1
-                    mario.set_moving()
+                mario.vekt = -1
+                mario.set_moving()
             elif event.key == pygame.K_RIGHT:
-                if not mario.jumping:
-                    mario.vekt = 1
-                    mario.set_moving()
-            elif event.key == pygame.K_DOWN:
-                if mario.jumping:
-                    mario.zn = True
+                mario.vekt = 1
+                mario.set_moving()
+            elif event.key == 1073742048:
+                mario.potential = 0
         if event.type == pygame.KEYUP and event.key != pygame.K_SPACE:
             if mario.moving:
                 mario.set_moving()
 
     screen.fill((0, 0, 0))
-    #if mario.have_to_move_earth(width):
-    #   render platfrmm
     all_sprites.update()
     all_sprites.draw(screen)
     entities.draw(screen)
