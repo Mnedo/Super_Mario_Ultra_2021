@@ -1,4 +1,3 @@
-"""
 import pygame
 import os
 import sys
@@ -31,7 +30,10 @@ class Mob(pygame.sprite.Sprite):
             self.image = load_image("Mob_Cupa.png")
         self.rect = self.image.get_rect()
         self.rect.x = -100
-        self.rect.y = 500  # зависит от платформы
+        if randomchik:
+            self.rect.y = 527
+        else:
+            self.rect.y = 500
         self.check = 0
 
     def move(self):
@@ -43,12 +45,17 @@ class Mob(pygame.sprite.Sprite):
             self.image = load_image("Mob_Gumba.png")
         else:
             self.image = load_image("Mob_Cupa.png")
+        self.rect = self.image.get_rect()
+        if randomchik:
+            self.rect.y = 527
+        else:
+            self.rect.y = 500
         self.rect.x = -100  # зависит от размера спрайта
-        self.rect.y = 500
         self.check = 0
 
     def touch_jump(self, x, y):
-        if x in list(range(self.rect.x, self.rect.x + 51)) and y in list(range(self.rect.y, self.rect.y + 51)):
+        # if x in list(range(self.rect.x, self.rect.x + 51)) and y in list(range(self.rect.y, self.rect.y + 51)):
+        if x == 400 and y == 400:
             return True
         return False  # проверка на то, коснулся ли игрок
 
@@ -58,6 +65,7 @@ class Mob(pygame.sprite.Sprite):
                 self.rect.y -= 1
         self.check = 1
         self.rect.y += 1
+        self.rect.x -= 1
 
 
 class MobOnBox(pygame.sprite.Sprite):
@@ -81,61 +89,60 @@ class MobOnBox(pygame.sprite.Sprite):
         self.image = load_image(kill[number])
         self.rect.y += 2
 
-    def life(self):
-        self.rect.x = self.rect.x
-        self.rect.y = self.rect.y
+    # def life(self):
+    #     self.rect.x = self.rect.x
+    #     self.rect.y = self.rect.y
 
 
-pygame.init()
-size = width, height = 700, 700
-screen = pygame.display.set_mode(size)
-screen.fill(pygame.Color('black'))
-clock = pygame.time.Clock()
-running = True
-
-all_sprites = pygame.sprite.Group()
-sprite = pygame.sprite.Sprite()
-mob = Mob(all_sprites)
-
-all_sprites2 = pygame.sprite.Group()
-sprite2 = pygame.sprite.Sprite()
-mob_on_box = MobOnBox(300, 200, 30, 30, all_sprites2)  # пример
-mob_on_box2 = MobOnBox(400, 400, 50, 50, all_sprites2)  # пример
-counter = 0
-while running:
-    screen.fill((0, 0, 0))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    mob.move()
-    mob_on_box2.life()
-    if counter == 2000:
-        counter = 0
-        mob.again()
-    if mob.touch_jump(300, 500):  # Для примера. Позже я хочу сделать так, чтобы из класса платформы передавался
-        # "знак", что моба убили
-        for i in range(180):
-            mob.fall()
-            screen.fill((0, 0, 0))
-            all_sprites.draw(screen)
-            all_sprites2.draw(screen)
-            pygame.display.update()
-            clock.tick(100)
-    if counter == 0:  # Тоже для примера. Позже я хочу сделать так, чтобы из класса платформы передавался
-        # "знак", что моба убили
-        for i in range(17):  # кол-во картинок
-            mob_on_box.update(i)
-            screen.fill((0, 0, 0))
-            all_sprites2.draw(screen)
-            pygame.display.update()
-            clock.tick(15)
-    all_sprites.draw(screen)
-    all_sprites2.draw(screen)
-    counter += 1
-    pygame.display.update()
-    clock.tick(260)
-pygame.quit()
-"""
+# pygame.init()
+# size = width, height = 700, 700
+# screen = pygame.display.set_mode(size)
+# screen.fill(pygame.Color('black'))
+# clock = pygame.time.Clock()
+# running = True
+#
+# all_sprites = pygame.sprite.Group()
+# sprite = pygame.sprite.Sprite()
+# mob = Mob(all_sprites)
+#
+# all_sprites2 = pygame.sprite.Group()
+# sprite2 = pygame.sprite.Sprite()
+# mob_on_box = MobOnBox(300, 200, 30, 30, all_sprites2)  # пример
+# mob_on_box2 = MobOnBox(400, 400, 50, 50, all_sprites2)  # пример
+# counter = 0
+# while running:
+#     screen.fill((0, 0, 0))
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             running = False
+#     mob.move()
+#     mob_on_box2.life()
+#     if counter == 2000:
+#         counter = 0
+#         mob.again()
+#     if mob.touch_jump(300, 500):  # Для примера. Позже я хочу сделать так, чтобы из класса платформы передавался
+#         # "знак", что моба убили
+#         for i in range(180):
+#             mob.fall()
+#             screen.fill((0, 0, 0))
+#             all_sprites.draw(screen)
+#             all_sprites2.draw(screen)
+#             pygame.display.update()
+#             clock.tick(100)
+#     if counter == 0:  # Тоже для примера. Позже я хочу сделать так, чтобы из класса платформы передавался
+#         # "знак", что моба убили
+#         for i in range(17):  # кол-во картинок
+#             mob_on_box.update(i)
+#             screen.fill((0, 0, 0))
+#             all_sprites2.draw(screen)
+#             pygame.display.update()
+#             clock.tick(15)
+#     all_sprites.draw(screen)
+#     all_sprites2.draw(screen)
+#     counter += 1
+#     pygame.display.update()
+#     clock.tick(260)
+# pygame.quit()
 
 """
 классы объектов
