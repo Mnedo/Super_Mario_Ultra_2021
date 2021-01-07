@@ -1,5 +1,5 @@
 from Mark import Mario
-from Main_platform import SecondPlatform
+from Main_platform import MainPlatform
 from Start import Start, Settings, Info, Match
 
 # from Objects import MobOnBox, Mob
@@ -20,15 +20,18 @@ class Camera:
     # сдвинуть объект obj на смещение камеры
     def apply(self, obj):
         obj.rect.x += self.dx
-        obj.rect.y += self.dy
 
     # позиционировать камеру на объекте target
     def update(self, target):
-        self.dx = -(target.rect.x)
-        self.dy = -(target.rect.y)
+        if target.rect.x == old:
+            self.dx = 0
+        else:
+            if target.rect.x > old:
+                self.dx = -15
+            else:
+                self.dx = + 15
 
-
-import pygame, os, sys
+import pygame, os, sys, random
 
 
 def load_image(name, colorkey=None):
@@ -41,7 +44,7 @@ def load_image(name, colorkey=None):
     return image
 
 
-LENTH = 0
+LENTH = 5000
 LIFES = 1
 WIDTH, HEIGHT = 700, 600
 running = True
@@ -86,7 +89,7 @@ def start_screen(LENTH):
                 if play_but.click(x, y) and play_but.vekt != 3:
                     for el in mn:
                         el.vekt = 3
-                    return
+                    return LENTH
                 elif inf_but.click(x, y):
                     for el in mn:
                         el.vekt = 3
@@ -170,6 +173,7 @@ def start_screen(LENTH):
         clock.tick(30)
 
 
+camera = Camera()
 while running:
     LENTH = start_screen(LENTH)
     pygame.init()
@@ -185,12 +189,28 @@ while running:
     earth = pygame.sprite.Group()
     entities = pygame.sprite.Group()
     mario = Mario(20, 500, all_sprites)
-    camera = Camera()
-    platform = SecondPlatform(0, 576)
+
+    platform = MainPlatform(0, 580, True, LENTH)
     entities.add(platform)
+    all_sprites.add(platform)
+    bg = 100
+    end = 200
+    for i in range((LENTH - 100) // 135):
+        x = random.randint(bg, end)
+        y = random.randint(200, 500)
+        platform = MainPlatform(x, y, False, LENTH)
+        entities.add(platform)
+        all_sprites.add(platform)
+        bg += 135
+        end += 135
     mario.set_walls(entities)
     mario.set_group(mario_sprites)
+    old = 20
     while LIFES != 0:
+        camera.update(mario)
+        old = mario.rect.x
+        for sp in entities:
+            camera.apply(sp)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False

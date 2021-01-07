@@ -1,23 +1,29 @@
 import pygame
 from pygame import *
-import os
-import sys
+import random
+
 
 WIN_WIDTH = 1300
 WIN_HEIGHT = 600
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 
-PLATFORM_WIDTH = 3000
-PLATFORM_HEIGHT = 30
-PLATFORM_COLOR = pygame.Color("Green")
+PLATFORM_COLOR = pygame.Color("Pink")
 
 
-class SecondPlatform(sprite.Sprite):
-    def __init__(self, x, y):
-        sprite.Sprite.__init__(self)
-        self.image = Surface((PLATFORM_WIDTH, PLATFORM_HEIGHT))
-        self.image.fill(Color(PLATFORM_COLOR))
-        self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
+class MainPlatform(sprite.Sprite):
+    def __init__(self, x, y, flag, LENTH):
+        if not flag:
+            sprite.Sprite.__init__(self)
+            dl = random.randint(50, 130)
+            self.image = Surface((dl, 20))
+            self.image.fill(Color(PLATFORM_COLOR))
+            self.rect = Rect(x, y, dl, 20)
+        else:
+            sprite.Sprite.__init__(self)
+            self.image = Surface((LENTH, 30))
+            self.image.fill(Color(PLATFORM_COLOR))
+            self.rect = Rect(x, y, LENTH, 30)
+
 
 """
 class MainPlatform:
