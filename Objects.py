@@ -23,49 +23,49 @@ def load_image(name, colorkey=None):
 class Mob(pygame.sprite.Sprite):
     def __init__(self, *group):
         super().__init__(*group)
+        self.coll = 0
         randomchik = random.randint(0, 1)
         if randomchik:
             self.image = load_image("Mob_Gumba.png")
         else:
             self.image = load_image("Mob_Cupa.png")
+        self.mob_mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.rect.x = -100
+        self.rect.x = -200
         if randomchik:
-            self.rect.y = 527
+            self.rect.y = 533
         else:
-            self.rect.y = 500
+            self.rect.y = 506
         self.check = 0
 
     def move(self):
-        self.rect.x += 1
+        self.rect.x += 3
 
     def again(self):
+        self.coll = 0
         randomchik = random.randint(0, 1)
         if randomchik:
             self.image = load_image("Mob_Gumba.png")
         else:
             self.image = load_image("Mob_Cupa.png")
+        self.mob_mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         if randomchik:
-            self.rect.y = 527
+            self.rect.y = 533
         else:
-            self.rect.y = 500
+            self.rect.y = 506
         self.rect.x = -100  # зависит от размера спрайта
         self.check = 0
 
-    def touch_jump(self, x, y):
-        # if x in list(range(self.rect.x, self.rect.x + 51)) and y in list(range(self.rect.y, self.rect.y + 51)):
-        if x == 400 and y == 400:
-            return True
-        return False  # проверка на то, коснулся ли игрок
-
-    def fall(self):
-        if self.check == 0:
-            for i in range(10):
-                self.rect.y -= 1
-        self.check = 1
-        self.rect.y += 1
-        self.rect.x -= 1
+    def fall(self, hero, pos):
+        pos_m_x, pos_m_y = pos[0], pos[1]
+        if pygame.sprite.collide_mask(self, hero) and self.rect.y in list(range(pos_m_y, pos_m_y + 10)):
+            if self.check == 0:
+                self.coll = 1
+        if self.coll == 1:
+            self.check = 1
+            self.rect.y += 5
+            self.rect.x -= 3
 
 
 class MobOnBox(pygame.sprite.Sprite):

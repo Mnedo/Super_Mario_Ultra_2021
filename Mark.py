@@ -25,6 +25,7 @@ class Mario(pygame.sprite.Sprite):
     def __init__(self, x, y, *gr):
         super().__init__(gr)
         self.image = Mario.image_start
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -109,7 +110,7 @@ class Mario(pygame.sprite.Sprite):
         self.potential = 225
 
     def get_coords(self):
-        return (self.rect.x, self.rect.y + self.rect.w, pygame.mask.from_surface(self.image))
+        return [self.rect.x, self.rect.y + self.rect.w]
 
 
 """

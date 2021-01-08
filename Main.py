@@ -1,8 +1,7 @@
 from Mark import Mario
 from Main_platform import MainPlatform
 from Start import Start, Settings, Info, Match
-
-# from Objects import MobOnBox, Mob
+from Objects import MobOnBox, Mob
 
 """
 Код для проверки классов
@@ -172,7 +171,7 @@ def start_screen(LENTH):
         pygame.display.flip()
         clock.tick(30)
 
-
+counter = 0
 camera = Camera()
 while running:
     LENTH = start_screen(LENTH)
@@ -188,7 +187,10 @@ while running:
     mario_sprites = pygame.sprite.Group()
     earth = pygame.sprite.Group()
     entities = pygame.sprite.Group()
+    mob_sprites = pygame.sprite.Group()
+    sprite = pygame.sprite.Sprite()
     mario = Mario(20, 500, all_sprites)
+    mob = Mob(mob_sprites)
 
     platform = MainPlatform(0, 580, True, LENTH)
     entities.add(platform)
@@ -233,6 +235,14 @@ while running:
                     mario.set_moving()
 
         screen.fill((0, 0, 0))
+        mob.move()
+        counter += 1
+        if counter == 1000:
+            counter = 0
+            mob.again()
+        mob.fall(mario, mario.get_coords())
+        mob_sprites.update()
+        mob_sprites.draw(screen)
         all_sprites.update()
         all_sprites.draw(screen)
         entities.draw(screen)
