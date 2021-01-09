@@ -23,7 +23,7 @@ def load_image(name, colorkey=None):
 class Mob(pygame.sprite.Sprite):
     def __init__(self, *group):
         super().__init__(*group)
-        self.coll = 0
+        self.coll, self.count_mus = 0, 0
         randomchik = random.randint(0, 1)
         if randomchik:
             self.image = load_image("Mob_Gumba.png")
@@ -42,7 +42,7 @@ class Mob(pygame.sprite.Sprite):
         self.rect.x += 3
 
     def again(self):
-        self.coll = 0
+        self.coll, self.count_mus = 0, 0
         randomchik = random.randint(0, 1)
         if randomchik:
             self.image = load_image("Mob_Gumba.png")
@@ -66,6 +66,13 @@ class Mob(pygame.sprite.Sprite):
             self.check = 1
             self.rect.y += 5
             self.rect.x -= 3
+
+    def check_fall(self):
+        if self.count_mus == 0:
+            if self.coll == 1:
+                self.count_mus = 1
+                return True
+        return False
 
 
 class MobOnBox(pygame.sprite.Sprite):

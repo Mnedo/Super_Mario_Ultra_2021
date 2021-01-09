@@ -1,7 +1,12 @@
-from Mark import Mario
+import os
+import pygame
+import random
+import sys
+
 from Main_platform import MainPlatform
+from Mark import Mario
+from Objects import Mob
 from Start import Start, Settings, Info, Match
-from Objects import MobOnBox, Mob
 
 """
 Код для проверки классов
@@ -29,8 +34,6 @@ class Camera:
                 self.dx = -15
             else:
                 self.dx = + 15
-
-import pygame, os, sys, random
 
 
 def load_image(name, colorkey=None):
@@ -171,11 +174,16 @@ def start_screen(LENTH):
         pygame.display.flip()
         clock.tick(30)
 
+
 counter = 0
 camera = Camera()
 while running:
     LENTH = start_screen(LENTH)
     pygame.init()
+    pygame.mixer.init()
+    sound = pygame.mixer.Sound('death_mob.wav')
+    music = pygame.mixer.music.load('fon_2.mp3')
+    pygame.mixer.music.play(-1)
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Mario ultra 2021')
@@ -241,6 +249,8 @@ while running:
             counter = 0
             mob.again()
         mob.fall(mario, mario.get_coords())
+        if mob.check_fall():
+            sound.play()
         mob_sprites.update()
         mob_sprites.draw(screen)
         all_sprites.update()
