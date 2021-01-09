@@ -182,7 +182,7 @@ while running:
     pygame.init()
     pygame.mixer.init()
     sound = pygame.mixer.Sound('death_mob.wav')
-    music = pygame.mixer.music.load('fon_2.mp3')
+    music = pygame.mixer.music.load('fon_music.mp3')
     pygame.mixer.music.play(-1)
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size)
