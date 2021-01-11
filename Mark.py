@@ -21,6 +21,12 @@ class Mario(pygame.sprite.Sprite):
     image_stay_r = load_image("mario_stay_r.png")
     image_stay_l = load_image("mario_stay_l.png")
     image_start = load_image("mario_start.png")
+    image_damgel = load_image("damgel.png")
+    image_damgel1 = load_image("damge1l.png")
+    image_dethl = load_image("image_dethl.png")
+    image_damger = load_image("damger.png")
+    image_damger1 = load_image("damge1r.png")
+    image_dethr = load_image("image_dethr.png")
 
     def __init__(self, x, y, *gr):
         super().__init__(gr)
@@ -33,18 +39,24 @@ class Mario(pygame.sprite.Sprite):
         self.y = y
         self.jumping = False
         self.moving = False
+        self.shoting = False
         self.xod = 0
+        self.xod_shot = 0
         self.vekt = 0
         self.gr = []
         self.zn = False
         self.last_res = True
         self.potential = 0
+        self.lifes = 0
 
     def set_walls(self, gr):
         self.gr = gr
 
     def set_group(self, gr):
         gr.add(self)
+
+    def set_lifes(self, live):
+        self.lifes = live
 
     def update(self):
         if self.moving:
@@ -64,9 +76,12 @@ class Mario(pygame.sprite.Sprite):
             else:
                 self.image = Mario.image_jump_r
         elif self.potential != 0:
-            self.y -= 15
-            self.jumping = True
-            self.potential -= 15
+            if self.y >= 0:
+                self.y -= 15
+                self.jumping = True
+                self.potential -= 15
+            else:
+                self.potential = 0
             if self.vekt == -1:
                 self.image = Mario.image_jump_l
             else:
@@ -110,10 +125,42 @@ class Mario(pygame.sprite.Sprite):
             self.moving = True
 
     def start_jump(self):
-        self.potential = 225
+        if self.potential == 0:
+            self.potential = 225
+        else:
+            self.potential = (300 - self.potential)
 
     def get_coords(self):
         return [self.rect.x, self.rect.y + self.rect.w]
+
+    def damage_mario(self):
+        self.xod_shot += 1
+        if self.xod >= 60:
+            self.shoting = False
+        else:
+            self.shoting = True
+            self.lifes -= 1
+            if self.lifes == 0:
+                if self.vekt == 1:
+                    self.image = Mario.image_dethr
+                else:
+                    self.image = Mario.image_dethl
+            else:
+                if self.xod % 2 == 1:
+                    if self.vekt == 1:
+                        self.image = Mario.image_damger
+                    else:
+                        self.image = Mario.image_damgel
+                else:
+                    if self.vekt == 1:
+                        self.image = Mario.image_damger1
+                    else:
+                        self.image = Mario.image_damgel1
+
+
+    def update_lifes(self):
+        return self.lifes
+
 
 
 """

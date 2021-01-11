@@ -48,11 +48,11 @@ def load_image(name, colorkey=None):
 
 
 LENTH = 5000
-LIFES = 1
+LIFES = 3
 WIDTH, HEIGHT = 700, 600
 running = True
 FPS = 30
-
+fps_cahnge = 0
 
 def start_screen(LENTH):
     fon = pygame.transform.scale(load_image('start_screen.jpg'), (WIDTH, HEIGHT))
@@ -93,11 +93,11 @@ def start_screen(LENTH):
                     for el in mn:
                         el.vekt = 3
                     return LENTH
-                elif inf_but.click(x, y):
+                elif inf_but.click(x, y) and inf_but.vekt != 3:
                     for el in mn:
                         el.vekt = 3
                     writer = True
-                elif set_but.click(x, y):
+                elif set_but.click(x, y) and set_but.vekt != 3:
                     for el in mn:
                         el.vekt = 3
                     wix = True
@@ -175,89 +175,129 @@ def start_screen(LENTH):
         pygame.display.flip()
         clock.tick(30)
 
-
-counter = 0
-camera = Camera()
-while running:
-    LENTH = start_screen(LENTH)
+def lost(fps):
     pygame.init()
-    pygame.mixer.init()
-    sound = pygame.mixer.Sound('death_mob.wav')
-    music = pygame.mixer.music.load('fon_music.mp3')
-    pygame.mixer.music.play(-1)
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Mario ultra 2021')
     image = load_image("mario_start.png")
     pygame.display.set_icon(image)
-    screen.fill(pygame.Color('black'))
-    clock = pygame.time.Clock()
-    all_sprites = pygame.sprite.Group()
-    mario_sprites = pygame.sprite.Group()
-    earth = pygame.sprite.Group()
-    entities = pygame.sprite.Group()
-    mob_sprites = pygame.sprite.Group()
-    sprite = pygame.sprite.Sprite()
-    mario = Mario(20, 500, all_sprites)
-    mob = Mob(mob_sprites)
+    fps_cahnge = fps
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
+            sys.exit()
+            break
+    screen.fill((0, 0, 0))
+    mob_sprites.draw(screen)
+    all_sprites.draw(screen)
+    entities.draw(screen)
+    # Типа тут кнопочки
+    if fps_cahnge % 2 == 0:
+        image_lost = load_image('game_over.png')
+        screen.blit(image_lost, (0, 50))
+    else:
+        image_lost1 = load_image('game_over1.png')
+        screen.blit(image_lost1, (0, 50))
 
-    platform = MainPlatform(0, 580, True, LENTH)
-    entities.add(platform)
-    all_sprites.add(platform)
-    bg = 100
-    end = 200
-    while end <= LENTH:
-        x = random.randint(bg, end)
-        y = 400
-        platform = MainPlatform(x, y, False, LENTH)
+    clock.tick(10)
+    pygame.display.flip()
+
+while running:
+    if LIFES == 0:
+        fps_cahnge += 1
+        lost(fps_cahnge)
+    else:
+        LENTH = start_screen(LENTH)
+        camera = Camera()
+        pygame.init()
+        pygame.mixer.init()
+        sound = pygame.mixer.Sound('death_mob.wav')
+        music = pygame.mixer.music.load('fon_music.mp3')
+        pygame.mixer.music.play(-1)
+        size = WIDTH, HEIGHT
+        screen = pygame.display.set_mode(size)
+        pygame.display.set_caption('Mario ultra 2021')
+        image = load_image("mario_start.png")
+        pygame.display.set_icon(image)
+        screen.fill(pygame.Color('black'))
+        clock = pygame.time.Clock()
+        all_sprites = pygame.sprite.Group()
+        mario_sprites = pygame.sprite.Group()
+        earth = pygame.sprite.Group()
+        entities = pygame.sprite.Group()
+        mob_sprites = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        mario = Mario(20, 500, all_sprites)
+        mob = Mob(mob_sprites)
+
+        platform = MainPlatform(0, 580, True, LENTH)
         entities.add(platform)
         all_sprites.add(platform)
-        bg += 400
-        end += 510
-    mario.set_walls(entities)
-    mario.set_group(mario_sprites)
-    old = 20
-    while LIFES != 0:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-                sys.exit()
-                break
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    mario.start_jump()
-                elif event.key == pygame.K_LEFT:
-                    mario.vekt = -1
-                    mario.set_moving()
-                elif event.key == pygame.K_RIGHT:
-                    mario.vekt = 1
-                    mario.set_moving()
-                elif event.key == 1073742048:
-                    mario.potential = 0
-            if event.type == pygame.KEYUP and event.key != pygame.K_SPACE:
-                if mario.moving:
-                    mario.set_moving()
+        bg = 100
+        end = 200
+        counter = 0
+        while end <= LENTH:
+            x = random.randint(bg, end)
+            y = 400
+            platform = MainPlatform(x, y, False, LENTH)
+            entities.add(platform)
+            all_sprites.add(platform)
+            bg += 400
+            end += 510
+        mario.set_walls(entities)
+        mario.set_group(mario_sprites)
+        mario.set_lifes(LIFES)
+        old = 20
+        while LIFES != 0:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+                    break
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        mario.start_jump()
+                    elif event.key == pygame.K_LEFT:
+                        mario.vekt = -1
+                        mario.set_moving()
+                    elif event.key == pygame.K_RIGHT:
+                        mario.vekt = 1
+                        mario.set_moving()
+                    elif event.key == 1073742048:
+                        mario.potential = 0
+                if event.type == pygame.KEYUP and event.key != pygame.K_SPACE:
+                    if mario.moving:
+                        mario.set_moving()
 
-        screen.fill((0, 0, 0))
-        if mario.moving:
-            camera.update([mario.vekt, mario.x])
-            for sp in entities:
-                camera.apply(sp)
+            screen.fill((0, 0, 0))
+            LIFES = mario.update_lifes()
+            if mario.moving:
+                camera.update([mario.vekt, mario.x])
+                for sp in entities:
+                    camera.apply(sp)
 
-        mob.move()
-        counter += 1
-        if counter == 1000:
-            counter = 0
-            mob.again()
-        mob.fall(mario, mario.get_coords())
-        if mob.check_fall():
-            sound.play()
-        mob_sprites.update()
-        mob_sprites.draw(screen)
-        all_sprites.update()
-        all_sprites.draw(screen)
-        entities.draw(screen)
+            mob.move()
+            counter += 1
+            if counter == 200:
+                counter = 0
+                LIFES = 0
+                mob.again()
 
-        clock.tick(30)
-        pygame.display.flip()
+                # марио потеряет жизнь, если ты вставешь строку #mario.damage_mario() - сделай с этим все, что нужно :D
+            mob.fall(mario, mario.get_coords())
+            if mob.check_fall():
+                sound.play()
+
+
+
+            mob_sprites.update()
+            mob_sprites.draw(screen)
+            all_sprites.update()
+            all_sprites.draw(screen)
+            entities.draw(screen)
+
+            clock.tick(30)
+            pygame.display.flip()
