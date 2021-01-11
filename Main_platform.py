@@ -14,13 +14,13 @@ class MainPlatform(sprite.Sprite):
     def __init__(self, x, y, flag, LENTH):
         if not flag:
             sprite.Sprite.__init__(self)
-            dl = random.randint(50, 130)
-            self.image = Surface((dl, 20))
+            dl = 204
+            self.image = Surface((dl, 30))
             self.image.fill(Color(PLATFORM_COLOR))
             self.rect = Rect(x, y, dl, 20)
         else:
             sprite.Sprite.__init__(self)
-            self.image = Surface((LENTH, 30))
+            self.image = Surface((LENTH, 50))
             self.image.fill(Color(PLATFORM_COLOR))
             self.rect = Rect(x, y, LENTH, 30)
 

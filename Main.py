@@ -206,14 +206,14 @@ while running:
     all_sprites.add(platform)
     bg = 100
     end = 200
-    for i in range((LENTH - 100) // 135):
+    while end <= LENTH:
         x = random.randint(bg, end)
-        y = random.randint(200, 500)
+        y = 400
         platform = MainPlatform(x, y, False, LENTH)
         entities.add(platform)
         all_sprites.add(platform)
-        bg += 135
-        end += 135
+        bg += 400
+        end += 510
     mario.set_walls(entities)
     mario.set_group(mario_sprites)
     old = 20
