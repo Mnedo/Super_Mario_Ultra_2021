@@ -83,7 +83,10 @@ class Mario(pygame.sprite.Sprite):
         self.vekt = x
         if x == 1:
             if self.vekt != 0:
-                self.x += 8
+                if self.x <= 350:
+                    self.x += 8
+                else:
+                    self.x += 0
             if self.xod % 2 == 1:
                 self.image = Mario.image_run1_r
             else:

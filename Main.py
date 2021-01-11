@@ -26,15 +26,16 @@ class Camera:
         obj.rect.x += self.dx
 
     # позиционировать камеру на объекте target
-    def update(self, target):
-        if target.rect.x == old:
-            self.dx = 0
+    def update(self, sp):
+        self.mario_vekt = sp[0]
+        self.mario_x = sp[1]
+        if self.mario_x >= 250:
+            if self.mario_vekt == 1:
+                self.dx = -8
+            elif self.mario_vekt == -1:
+                self.dx = 8
         else:
-            if target.rect.x > old:
-                self.dx = -15
-            else:
-                self.dx = + 15
-
+            self.dx = 0
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -217,10 +218,6 @@ while running:
     mario.set_group(mario_sprites)
     old = 20
     while LIFES != 0:
-        camera.update(mario)
-        old = mario.rect.x
-        for sp in entities:
-            camera.apply(sp)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -243,6 +240,11 @@ while running:
                     mario.set_moving()
 
         screen.fill((0, 0, 0))
+        if mario.moving:
+            camera.update([mario.vekt, mario.x])
+            for sp in entities:
+                camera.apply(sp)
+
         mob.move()
         counter += 1
         if counter == 1000:
