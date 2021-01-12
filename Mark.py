@@ -107,7 +107,6 @@ class Mario(pygame.sprite.Sprite):
                         self.image = Mario.image_jump_r
             self.rect = self.rect.move(self.x - self.rect.x, self.y - self.rect.y)
 
-
     def move_x(self, x):
         self.xod += 1
         self.vekt = x
@@ -144,9 +143,9 @@ class Mario(pygame.sprite.Sprite):
     def start_jump(self):
         if self.potential == 0:
             self.potential = 225
-            #self.potential = 150
+            # self.potential = 150
         else:
-            self.potential = (300 - self.potential)
+            self.potential = 120
 
     def get_coords(self):
         return [self.rect.x, self.rect.y + self.rect.w]
@@ -182,7 +181,6 @@ class Mario(pygame.sprite.Sprite):
                         self.image = Mario.image_damger1
                     else:
                         self.image = Mario.image_damgel1
-
 
     def update_lifes(self):
         return self.lifes

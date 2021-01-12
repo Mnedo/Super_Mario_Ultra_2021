@@ -156,7 +156,6 @@ class Match(pygame.sprite.Sprite):
         self.image = Match.image
 
 
-
 class Reload(pygame.sprite.Sprite):
     image = load_image("reload.png")
     image1 = load_image("reload1.png")
@@ -236,4 +235,69 @@ class Heart(pygame.sprite.Sprite):
         self.rect.y = y
 
 
+class Quit(pygame.sprite.Sprite):
+    image = load_image("onoff.png")
+    image1 = load_image("onoff1.png")
+    imn = load_image("nothing.png")
 
+    def __init__(self, *gr):
+        super().__init__(gr)
+        self.image = Quit.image
+        self.rect = self.image.get_rect()
+        self.rect.x = 20
+        self.rect.y = 475
+        self.vekt = 0
+
+    def is_on(self, x, y):
+        if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
+                                                                                 self.rect.y + self.rect.h + 1):
+            self.vekt = 1
+        else:
+            self.vekt = 0
+
+    def click(self, x, y):
+        if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
+                                                                                 self.rect.y + self.rect.h + 1):
+            return True
+
+    def update(self):
+        if self.vekt == 3:
+            self.image = Quit.imn
+        elif self.vekt == 0:
+            self.image = Quit.image
+        else:
+            self.image = Quit.image1
+
+
+class Next(pygame.sprite.Sprite):
+    image = load_image("next.png")
+    image1 = load_image("next1.png")
+    imn = load_image("nothing.png")
+
+    def __init__(self, *gr):
+        super().__init__(gr)
+        self.image = Next.image
+        self.rect = self.image.get_rect()
+        self.rect.x = 560
+        self.rect.y = 475
+        self.vekt = 0
+
+    def is_on(self, x, y):
+        if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
+                                                                                 self.rect.y + self.rect.h + 1):
+            self.vekt = 1
+        else:
+            self.vekt = 0
+
+    def click(self, x, y):
+        if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
+                                                                                 self.rect.y + self.rect.h + 1):
+            return True
+
+    def update(self):
+        if self.vekt == 3:
+            self.image = Next.imn
+        elif self.vekt == 0:
+            self.image = Next.image
+        else:
+            self.image = Next.image1

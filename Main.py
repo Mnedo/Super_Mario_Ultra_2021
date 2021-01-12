@@ -6,7 +6,7 @@ import sys
 from Main_platform import MainPlatform
 from Mark import Mario
 from Objects import Mob
-from Start import Start, Settings, Info, Match, Reload, Exit, Heart
+from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next
 
 
 class Camera:
@@ -38,6 +38,7 @@ class Camera:
     def get_lent(self):
         return self.dash
 
+
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     # если файл не существует, то выходим
@@ -54,6 +55,8 @@ WIDTH, HEIGHT = 700, 600
 running = True
 FPS = 30
 fps_cahnge = 0
+wons = 0
+
 
 def start_screen(LENTH):
     fon = pygame.transform.scale(load_image('start_screen.jpg'), (WIDTH, HEIGHT))
@@ -177,6 +180,7 @@ def start_screen(LENTH):
         pygame.display.flip()
         clock.tick(30)
 
+
 def lost(fps):
     pygame.init()
     size = WIDTH, HEIGHT
@@ -211,6 +215,7 @@ def lost(fps):
                 pygame.quit()
                 sys.exit()
     screen.fill((0, 0, 0))
+    screen.blit(load_image("Фон.png"), (0, 0))
     mob_sprites.draw(screen)
     all_sprites.draw(screen)
     entities.draw(screen)
@@ -227,19 +232,69 @@ def lost(fps):
     button_end_sprites.update()
     button_end_sprites.draw(screen)
 
-
     image = load_image("mario_start.png")
     pygame.display.set_icon(image)
     clock.tick(10)
     pygame.display.flip()
     return 0
 
-def won():
-    pass
 
-#LENTH = 1500
-#LIFES = 1
-#test variant
+def won(LENTH):
+    pygame.init()
+    size = WIDTH, HEIGHT
+    screen = pygame.display.set_mode(size)
+    pygame.display.set_caption('Mario ultra 2021')
+    image = load_image("mario_start.png")
+    pygame.display.set_icon(image)
+
+    buttons = pygame.sprite.Group()
+    quit_but = Quit(buttons)
+    next_but = Next(buttons)
+    mn = [quit_but, next_but]
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEMOTION:
+                zn = True
+                for el in mn:
+                    if el.vekt == 3:
+                        zn = False
+                if zn:
+                    for el in mn:
+                        x, y = event.pos
+                        el.is_on(x, y)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if next_but.click(x, y) and next_but.vekt != 3:
+                    for el in mn:
+                        el.vekt = 3
+                    if LENTH == 5000:
+                        LENTH = 30000
+                    elif LENTH == 30000:
+                        LENTH = 50000
+                    elif LENTH == 50000:
+                        LENTH = 3 * LENTH
+                    return LENTH, 3
+                elif quit_but.click(x, y) and quit_but.vekt != 3:
+                    for el in mn:
+                        el.vekt = 3
+                    print("Thank you for the game!")
+                    pygame.quit()
+                    sys.exit()
+        screen.fill((0, 0, 0))
+        screen.blit(load_image("Won_screen.png"), (0, 0))
+        buttons.update()
+        buttons.draw(screen)
+
+        clock.tick(10)
+        pygame.display.flip()
+
+
+# LENTH = 1200
+# LIFES = 1
+# test variant
 while running:
     if LIFES == 0:
         if fps_cahnge == 0:
@@ -252,8 +307,9 @@ while running:
     else:
         fps_cahnge = 0
         actual_lenth = 0
-        LENTH = start_screen(LENTH)
-        if LENTH == 50000:
+        if wons == 0:
+            LENTH = start_screen(LENTH)
+        if LENTH >= 50000:
             LIFES = 1
         camera = Camera()
         pygame.init()
@@ -299,6 +355,8 @@ while running:
         mario.set_walls(entities)
         mario.set_group(mario_sprites)
         mario.set_lifes(LIFES)
+        image = load_image("mario_start.png")
+        pygame.display.set_icon(image)
         old = 20
         while LIFES != 0:
             for event in pygame.event.get():
@@ -323,6 +381,7 @@ while running:
                         mario.set_moving()
 
             screen.fill((0, 0, 0))
+            screen.blit(load_image("Фон.png"), (0, 0))
             LIFES = mario.update_lifes()
             hearts_gp = pygame.sprite.Group()
             for i in range(1, LIFES + 1):
@@ -333,36 +392,33 @@ while running:
                 camera.update([mario.vekt, mario.x])
                 for sp in entities:
                     camera.apply(sp)
-
-            mob.move()
-            counter += 1
-            if counter == 100:
-                counter = 0
-
-                mob.again()
-
-                # марио потеряет жизнь, если ты вставешь строку #mario.damage_mario() - сделай с этим все, что нужно :D
-                # Нужно чтобы моб "дамжил" марио, пока тот счетчик жизни не изменится (типа анимация урона)
-                # дойдя до конца есть пример
-            mob.fall(mario, mario.get_coords())
-            if mob.check_fall():
-                sound.play()
-
-
-            mob_sprites.update()
-            mob_sprites.draw(screen)
-            all_sprites.update()
-            all_sprites.draw(screen)
-            hearts_gp.draw(screen)
-            entities.draw(screen)
-
-            clock.tick(30)
-            pygame.display.flip()
-
             if actual_lenth >= LENTH - 500:
                 # пример урона
-                if LIFES == 1:
+                if LIFES == 3:
                     mario.damage_mario()
-                won()
-            if actual_lenth >= LENTH - 250:
-                LIFES = 0
+                    wons += 1
+                LENTH, LIFES = won(LENTH)
+                break
+            else:
+                mob.move()
+                counter += 1
+                if counter == 1000:
+                    counter = 0
+
+                    mob.again()
+
+                    # марио потеряет жизнь, если ты вставешь строку #mario.damage_mario() - сделай с этим все, что нужно :D
+                    # Нужно чтобы моб "дамжил" марио, пока тот счетчик жизни не изменится (типа анимация урона)
+                    # дойдя до конца есть пример
+                mob.fall(mario, mario.get_coords())
+                if mob.check_fall():
+                    sound.play()
+
+                mob_sprites.update()
+                mob_sprites.draw(screen)
+                all_sprites.update()
+                all_sprites.draw(screen)
+                hearts_gp.draw(screen)
+                entities.draw(screen)
+                clock.tick(30)
+                pygame.display.flip()
