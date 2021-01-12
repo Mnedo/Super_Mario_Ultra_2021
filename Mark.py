@@ -49,6 +49,7 @@ class Mario(pygame.sprite.Sprite):
         self.potential = 0
         self.lifes = 0
         self.dash = 0
+        self.mn = [400, 580]
 
     def set_walls(self, gr):
         self.gr = gr
@@ -69,6 +70,7 @@ class Mario(pygame.sprite.Sprite):
                         self.image = Mario.image_stay_l
                     else:
                         self.image = Mario.image_stay_r
+
             if not pygame.sprite.spritecollideany(self, self.gr) and self.potential == 0:
                 self.jumping = True
                 self.y += 15
@@ -89,11 +91,21 @@ class Mario(pygame.sprite.Sprite):
                 else:
                     self.image = Mario.image_jump_r
             else:
-                self.jumping = False
-                if self.last_res:
-                    self.y -= 5
-                    self.last_res = False
+                if self.y + 56 <= self.mn[0] or (self.y >= self.mn[0] + 20 and self.y + 56 <= self.mn[1]):
+                    self.jumping = False
+                    if self.last_res:
+                        self.y -= 5
+                        self.last_res = False
+                else:
+                    self.jumping = True
+                    self.y += 15
+                    self.last_res = True
+                    if self.vekt == -1:
+                        self.image = Mario.image_jump_l
+                    else:
+                        self.image = Mario.image_jump_r
             self.rect = self.rect.move(self.x - self.rect.x, self.y - self.rect.y)
+
 
     def move_x(self, x):
         self.xod += 1
@@ -131,6 +143,7 @@ class Mario(pygame.sprite.Sprite):
     def start_jump(self):
         if self.potential == 0:
             self.potential = 225
+            #self.potential = 150
         else:
             self.potential = (300 - self.potential)
 

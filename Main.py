@@ -241,7 +241,7 @@ def lost(fps):
 
 def won():
     pass
-LENTH = 1000
+LENTH = 2500
 while running:
     if LIFES == 0:
         if fps_cahnge == 0:
@@ -360,5 +360,5 @@ while running:
                 if LIFES == 3:
                     mario.damage_mario()
                 won()
-            if actual_lenth >= LENTH:
+            if actual_lenth >= LENTH - 250:
                 LIFES = 0
