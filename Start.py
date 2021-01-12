@@ -224,3 +224,16 @@ class Exit(pygame.sprite.Sprite):
         else:
             self.image = Exit.image1
 
+
+class Heart(pygame.sprite.Sprite):
+    image = load_image("heart.png")
+
+    def __init__(self, x, y, *gr):
+        super().__init__(gr)
+        self.image = Heart.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
+

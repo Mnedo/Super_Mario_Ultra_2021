@@ -40,6 +40,7 @@ class Mario(pygame.sprite.Sprite):
         self.jumping = False
         self.moving = False
         self.shoting = False
+        self.killed = False
         self.xod = 0
         self.xod_shot = 0
         self.vekt = 0
@@ -61,7 +62,7 @@ class Mario(pygame.sprite.Sprite):
         self.lifes = live
 
     def update(self):
-        if not self.shoting:
+        if not self.shoting and not self.killed:
             if self.moving:
                 self.move_x(self.vekt)
             else:
@@ -156,9 +157,16 @@ class Mario(pygame.sprite.Sprite):
             self.shoting = False
             self.xod_shot = 0
             self.lifes -= 1
+            if self.lifes <= 0:
+                self.killed = True
+                if self.vekt == 1:
+                    self.image = Mario.image_dethr
+                else:
+                    self.image = Mario.image_dethl
         else:
             self.shoting = True
             if self.lifes <= 0:
+                self.killed = True
                 if self.vekt == 1:
                     self.image = Mario.image_dethr
                 else:

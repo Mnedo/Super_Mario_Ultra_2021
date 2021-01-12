@@ -6,13 +6,7 @@ import sys
 from Main_platform import MainPlatform
 from Mark import Mario
 from Objects import Mob
-from Start import Start, Settings, Info, Match, Reload, Exit
-
-"""
-Код для проверки классов
-
-В дальнейшем рабочий код
-"""
+from Start import Start, Settings, Info, Match, Reload, Exit, Heart
 
 
 class Camera:
@@ -233,15 +227,19 @@ def lost(fps):
     button_end_sprites.update()
     button_end_sprites.draw(screen)
 
-    clock.tick(10)
+
     image = load_image("mario_start.png")
     pygame.display.set_icon(image)
+    clock.tick(10)
     pygame.display.flip()
     return 0
 
 def won():
     pass
-LENTH = 2500
+
+#LENTH = 1500
+#LIFES = 1
+#test variant
 while running:
     if LIFES == 0:
         if fps_cahnge == 0:
@@ -255,6 +253,8 @@ while running:
         fps_cahnge = 0
         actual_lenth = 0
         LENTH = start_screen(LENTH)
+        if LENTH == 50000:
+            LIFES = 1
         camera = Camera()
         pygame.init()
         pygame.mixer.init()
@@ -294,8 +294,8 @@ while running:
             platform = MainPlatform(x, y, False, LENTH)
             entities.add(platform)
             all_sprites.add(platform)
-            bg += 400
-            end += 510
+            bg += 600
+            end += 910
         mario.set_walls(entities)
         mario.set_group(mario_sprites)
         mario.set_lifes(LIFES)
@@ -324,6 +324,9 @@ while running:
 
             screen.fill((0, 0, 0))
             LIFES = mario.update_lifes()
+            hearts_gp = pygame.sprite.Group()
+            for i in range(1, LIFES + 1):
+                heart = Heart(WIDTH - i * 40, 10, hearts_gp)
             if mario.moving and not mario.shoting:
                 actual_lenth += camera.get_lent()
             if mario.moving and not mario.shoting:
@@ -350,14 +353,15 @@ while running:
             mob_sprites.draw(screen)
             all_sprites.update()
             all_sprites.draw(screen)
+            hearts_gp.draw(screen)
             entities.draw(screen)
 
             clock.tick(30)
             pygame.display.flip()
 
             if actual_lenth >= LENTH - 500:
-                # победка
-                if LIFES == 3:
+                # пример урона
+                if LIFES == 1:
                     mario.damage_mario()
                 won()
             if actual_lenth >= LENTH - 250:
