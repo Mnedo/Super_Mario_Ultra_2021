@@ -6,7 +6,7 @@ import sys
 from Main_platform import MainPlatform
 from Mark import Mario
 from Objects import Mob
-from Start import Start, Settings, Info, Match
+from Start import Start, Settings, Info, Match, Reload, Exit
 
 """
 Код для проверки классов
@@ -20,6 +20,7 @@ class Camera:
     def __init__(self):
         self.dx = 0
         self.dy = 0
+        self.dash = 0
 
     # сдвинуть объект obj на смещение камеры
     def apply(self, obj):
@@ -32,10 +33,16 @@ class Camera:
         if self.mario_x >= 250:
             if self.mario_vekt == 1:
                 self.dx = -8
+                self.dash = 8
             elif self.mario_vekt == -1:
                 self.dx = 8
+                self.dash = -8
         else:
             self.dx = 0
+            self.dash = mario.get_dash()
+
+    def get_lent(self):
+        return self.dash
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -138,6 +145,7 @@ def start_screen(LENTH):
                     wix = False
                     for el in mn1:
                         el.clear()
+
         all_sp.update()
         screen.blit(fon, (0, 0))
         all_sp.draw(screen)
@@ -185,30 +193,67 @@ def lost(fps):
     fps_cahnge = fps
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
             pygame.quit()
             sys.exit()
-            break
+        elif event.type == pygame.MOUSEMOTION:
+            zn = True
+            for el in mn:
+                if el.vekt == 3:
+                    zn = False
+            if zn:
+                for el in mn:
+                    x, y = event.pos
+                    el.is_on(x, y)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            x, y = event.pos
+            if reload_but.click(x, y) and reload_but.vekt != 3:
+                for el in mn:
+                    el.vekt = 3
+                return 3
+            elif exit_but.click(x, y) and exit_but.vekt != 3:
+                for el in mn:
+                    el.vekt = 3
+                print("U just can't win...")
+                pygame.quit()
+                sys.exit()
     screen.fill((0, 0, 0))
     mob_sprites.draw(screen)
     all_sprites.draw(screen)
     entities.draw(screen)
-    # Типа тут кнопочки
-    if fps_cahnge % 2 == 0:
+    if fps_cahnge == 1:
         image_lost = load_image('game_over.png')
-        screen.blit(image_lost, (0, 50))
-    else:
+        screen.blit(image_lost, (0, 0))
+    elif fps_cahnge == 2:
         image_lost1 = load_image('game_over1.png')
-        screen.blit(image_lost1, (0, 50))
+        screen.blit(image_lost1, (0, 0))
+    elif fps_cahnge == 3:
+        image_lost1 = load_image('game_over2.png')
+        screen.blit(image_lost1, (0, 0))
+
+    button_end_sprites.update()
+    button_end_sprites.draw(screen)
 
     clock.tick(10)
+    image = load_image("mario_start.png")
+    pygame.display.set_icon(image)
     pygame.display.flip()
+    return 0
 
+def won():
+    pass
+LENTH = 1000
 while running:
     if LIFES == 0:
+        if fps_cahnge == 0:
+            for el in mn:
+                el.vekt = 0
         fps_cahnge += 1
-        lost(fps_cahnge)
+        if fps_cahnge > 3:
+            fps_cahnge = 1
+        LIFES = lost(fps_cahnge)
     else:
+        fps_cahnge = 0
+        actual_lenth = 0
         LENTH = start_screen(LENTH)
         camera = Camera()
         pygame.init()
@@ -223,6 +268,11 @@ while running:
         pygame.display.set_icon(image)
         screen.fill(pygame.Color('black'))
         clock = pygame.time.Clock()
+        button_end_sprites = pygame.sprite.Group()
+        reload_but = Reload(button_end_sprites)
+        exit_but = Exit(button_end_sprites)
+        mn = [reload_but, exit_but]
+
         all_sprites = pygame.sprite.Group()
         mario_sprites = pygame.sprite.Group()
         earth = pygame.sprite.Group()
@@ -274,23 +324,26 @@ while running:
 
             screen.fill((0, 0, 0))
             LIFES = mario.update_lifes()
-            if mario.moving:
+            if mario.moving and not mario.shoting:
+                actual_lenth += camera.get_lent()
+            if mario.moving and not mario.shoting:
                 camera.update([mario.vekt, mario.x])
                 for sp in entities:
                     camera.apply(sp)
 
             mob.move()
             counter += 1
-            if counter == 200:
+            if counter == 100:
                 counter = 0
-                LIFES = 0
+
                 mob.again()
 
                 # марио потеряет жизнь, если ты вставешь строку #mario.damage_mario() - сделай с этим все, что нужно :D
+                # Нужно чтобы моб "дамжил" марио, пока тот счетчик жизни не изменится (типа анимация урона)
+                # дойдя до конца есть пример
             mob.fall(mario, mario.get_coords())
             if mob.check_fall():
                 sound.play()
-
 
 
             mob_sprites.update()
@@ -301,3 +354,11 @@ while running:
 
             clock.tick(30)
             pygame.display.flip()
+
+            if actual_lenth >= LENTH - 500:
+                # победка
+                if LIFES == 3:
+                    mario.damage_mario()
+                won()
+            if actual_lenth >= LENTH:
+                LIFES = 0

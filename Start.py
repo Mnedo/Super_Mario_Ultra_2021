@@ -154,3 +154,73 @@ class Match(pygame.sprite.Sprite):
 
     def del_dot(self):
         self.image = Match.image
+
+
+
+class Reload(pygame.sprite.Sprite):
+    image = load_image("reload.png")
+    image1 = load_image("reload1.png")
+    imn = load_image("nothing.png")
+
+    def __init__(self, *gr):
+        super().__init__(gr)
+        self.image = Reload.image
+        self.rect = self.image.get_rect()
+        self.rect.x = 40
+        self.rect.y = 400
+        self.vekt = 3
+
+    def is_on(self, x, y):
+        if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
+                                                                                 self.rect.y + self.rect.h + 1):
+            self.vekt = 1
+        else:
+            self.vekt = 0
+
+    def click(self, x, y):
+        if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
+                                                                                 self.rect.y + self.rect.h + 1):
+            return True
+
+    def update(self):
+        if self.vekt == 3:
+            self.image = Reload.imn
+        elif self.vekt == 0:
+            self.image = Reload.image
+        else:
+            self.image = Reload.image1
+
+
+class Exit(pygame.sprite.Sprite):
+    image = load_image("exit.png")
+    image1 = load_image("exit1.png")
+    imn = load_image("nothing.png")
+
+    def __init__(self, *gr):
+        super().__init__(gr)
+        self.image = Exit.image
+        self.rect = self.image.get_rect()
+        self.rect.x = 520
+        self.rect.y = 400
+        self.vekt = 3
+
+    def is_on(self, x, y):
+        if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
+                                                                                 self.rect.y + self.rect.h + 1):
+            self.vekt = 1
+        else:
+            self.vekt = 0
+
+    def click(self, x, y):
+        if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
+                                                                                 self.rect.y + self.rect.h + 1):
+            return True
+
+    def update(self):
+        if self.vekt == 3:
+            self.image = Exit.imn
+        elif self.vekt == 0:
+            self.image = Exit.image
+        else:
+            self.image = Exit.image1
+
