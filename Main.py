@@ -359,7 +359,7 @@ while running:
                 bg += 600
                 end += 910
         elif LENTH == 30000:
-            while end <= LENTH - 300:
+            while end <= LENTH - 200:
                 x = random.randint(bg, end)
                 y = 400
                 platform = MainPlatform(x, y, False, LENTH)
@@ -368,7 +368,7 @@ while running:
                 bg += 400
                 end += 650
         elif LENTH == 50000:
-            while end <= LENTH - 300:
+            while end <= LENTH - 200:
                 x = random.randint(bg, end)
                 y = 350
                 platform = MainPlatform(x, y, False, LENTH)
