@@ -7,14 +7,19 @@ WIN_WIDTH = 1300
 WIN_HEIGHT = 600
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 
-PLATFORM_COLOR = pygame.Color("Pink")
+PLATFORM_COLOR = pygame.Color("#8FBC8F")
 
 
 class MainPlatform(sprite.Sprite):
     def __init__(self, x, y, flag, LENTH):
         if not flag:
             sprite.Sprite.__init__(self)
-            dl = 204
+            if LENTH == 5000:
+                dl = 204
+            elif LENTH == 30000:
+                dl = 154
+            elif LENTH == 50000:
+                dl = 100
             self.image = Surface((dl, 30))
             self.image.fill(Color(PLATFORM_COLOR))
             self.rect = Rect(x, y, dl, 20)

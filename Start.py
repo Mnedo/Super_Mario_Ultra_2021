@@ -301,3 +301,15 @@ class Next(pygame.sprite.Sprite):
             self.image = Next.image
         else:
             self.image = Next.image1
+
+
+class Finish(pygame.sprite.Sprite):
+    image = load_image("Tree_fin.png")
+    image = pygame.transform.scale(image, (300, 300))
+
+    def __init__(self, x, y, *gr):
+        super().__init__(gr)
+        self.image = Finish.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y

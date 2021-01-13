@@ -6,9 +6,9 @@ import sys
 from Main_platform import MainPlatform
 from Mark import Mario
 from Objects import Mob
-from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next
+from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next, Finish
 
-
+x_fin = 400
 class Camera:
     # зададим начальный сдвиг камеры
     def __init__(self):
@@ -296,6 +296,7 @@ def won(LENTH):
 # LIFES = 1
 # test variant
 while running:
+    der = True
     if LIFES == 0:
         if fps_cahnge == 0:
             for el in mn:
@@ -344,14 +345,37 @@ while running:
         bg = 100
         end = 200
         counter = 0
-        while end <= LENTH:
-            x = random.randint(bg, end)
-            y = 400
-            platform = MainPlatform(x, y, False, LENTH)
-            entities.add(platform)
-            all_sprites.add(platform)
-            bg += 600
-            end += 910
+
+        # Конец уровня - дерево
+        finish = Finish(LENTH - 480, 298, entities)
+
+        if LENTH == 5000:
+            while end <= LENTH - 300:
+                x = random.randint(bg, end)
+                y = 400
+                platform = MainPlatform(x, y, False, LENTH)
+                entities.add(platform)
+                all_sprites.add(platform)
+                bg += 600
+                end += 910
+        elif LENTH == 30000:
+            while end <= LENTH - 300:
+                x = random.randint(bg, end)
+                y = 400
+                platform = MainPlatform(x, y, False, LENTH)
+                entities.add(platform)
+                all_sprites.add(platform)
+                bg += 400
+                end += 650
+        elif LENTH == 50000:
+            while end <= LENTH - 300:
+                x = random.randint(bg, end)
+                y = 350
+                platform = MainPlatform(x, y, False, LENTH)
+                entities.add(platform)
+                all_sprites.add(platform)
+                bg += 400
+                end += 550
         mario.set_walls(entities)
         mario.set_group(mario_sprites)
         mario.set_lifes(LIFES)
@@ -380,8 +404,10 @@ while running:
                     if mario.moving:
                         mario.set_moving()
 
+
             screen.fill((0, 0, 0))
             screen.blit(load_image("Фон.png"), (0, 0))
+
             LIFES = mario.update_lifes()
             hearts_gp = pygame.sprite.Group()
             for i in range(1, LIFES + 1):
