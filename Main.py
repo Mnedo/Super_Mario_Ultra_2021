@@ -148,10 +148,10 @@ def start_screen(LENTH):
         all_sp.draw(screen)
         msp.draw(screen)
         if writer:
-            intro_text = ["                                                          Авторы:", "", "",
-                          "             Дарья Иващенко       Нарек Абрамян       Михаил Недосекин"]
-            font = pygame.font.Font(None, 27)
-            text_coord = 222
+            intro_text = ["                         Авторы:", "", "",
+                          "  Михаил Недосекин    Нарек Абрамян      Дарья Иващенко"]
+            font = pygame.font.Font('Data/Mario_font.ttf', 12)
+            text_coord = 230
             for line in intro_text:
                 string_rendered = font.render(line, 4, pygame.Color('yellow'))
                 intro_rect = string_rendered.get_rect()
@@ -160,20 +160,42 @@ def start_screen(LENTH):
                 intro_rect.x = 10
                 text_coord += intro_rect.height
                 screen.blit(string_rendered, intro_rect)
+            intro_text = ["Press esc to leave"]
+            font = pygame.font.Font('Data/Mario_font.ttf', 8)
+            text_coord = 230
+            for line in intro_text:
+                string_rendered = font.render(line, 4, pygame.Color('blue'))
+                intro_rect = string_rendered.get_rect()
+                text_coord += 10
+                intro_rect.top = HEIGHT - 25
+                intro_rect.x = 10
+                text_coord += intro_rect.height
+                screen.blit(string_rendered, intro_rect)
         elif wix:
-            intro_text = ["                                            Выберите cложность :", "", "",
-                          "                                                                                    Лёгкая",
-                          "", "", "", "",
-                          "                                                                                    Средняя",
-                          "", "", "", "",
-                          "                                                                                    Хард"]
-            font = pygame.font.Font(None, 27)
+            intro_text = ["             Выберите cложность :", "", "",
+                          "                            Лёгкая",
+                          "", "", "", "", "",
+                          "                            Средняя",
+                          "", "", "", "", "",
+                          "                            Хард"]
+            font = pygame.font.Font('Data/Mario_font.ttf', 15)
             text_coord = 75
             for line in intro_text:
                 string_rendered = font.render(line, 1, (100, 0, 0))
                 intro_rect = string_rendered.get_rect()
                 text_coord += 10
                 intro_rect.top = text_coord
+                intro_rect.x = 10
+                text_coord += intro_rect.height
+                screen.blit(string_rendered, intro_rect)
+            intro_text = ["Press esc to leave"]
+            font = pygame.font.Font('Data/Mario_font.ttf', 8)
+            text_coord = 230
+            for line in intro_text:
+                string_rendered = font.render(line, 4, pygame.Color('blue'))
+                intro_rect = string_rendered.get_rect()
+                text_coord += 10
+                intro_rect.top = HEIGHT - 25
                 intro_rect.x = 10
                 text_coord += intro_rect.height
                 screen.blit(string_rendered, intro_rect)

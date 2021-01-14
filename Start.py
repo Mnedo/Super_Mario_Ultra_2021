@@ -130,7 +130,7 @@ class Match(pygame.sprite.Sprite):
             self.image = Match.image
         self.rect = self.image.get_rect()
         self.rect.x = 280
-        self.rect.y = 30 + i * 120
+        self.rect.y = 16 + i * 130
         self.i = i
         self.k = 0
 
