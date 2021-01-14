@@ -264,6 +264,7 @@ def lost(fps):
 
 def won(LENTH):
     pygame.init()
+    FONT = pygame.font.Font('Data/Mario_font.ttf', 20)
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Mario ultra 2021')
@@ -308,6 +309,25 @@ def won(LENTH):
                     sys.exit()
         screen.fill((0, 0, 0))
         screen.blit(load_image("Won_screen.png"), (0, 0))
+        font = FONT
+        text_coord = 218
+        intro_text = ["YOUR SCORE: " + str(round(SCORE))]
+        for line in intro_text:
+            string_rendered = font.render(line, 4, pygame.Color('gold'))
+            intro_rect = string_rendered.get_rect()
+            intro_rect.top = 400
+            intro_rect.x = text_coord - (len(str(SCORE)) - 1)
+            text_coord += intro_rect.height
+            screen.blit(string_rendered, intro_rect)
+        text_coord = 218
+        intro_text = ["BEST SCORE: " + str(round(BEST_SCORE))]
+        for line in intro_text:
+            string_rendered = font.render(line, 4, pygame.Color('gold'))
+            intro_rect = string_rendered.get_rect()
+            intro_rect.top = 430
+            intro_rect.x = text_coord - (len(str(SCORE)) - 1)
+            text_coord += intro_rect.height
+            screen.blit(string_rendered, intro_rect)
         buttons.update()
         buttons.draw(screen)
 
@@ -320,6 +340,7 @@ def won(LENTH):
 # LENTH = 1200
 # LIFES = 1
 # test variant
+BEST_SCORE = 0
 while running:
     der = True
     if LIFES == 0:
@@ -339,9 +360,9 @@ while running:
             LENTH = start_screen(LENTH)
         if LENTH >= 50000:
             LIFES = 1
-            KOEF = 0.5
+            KOEF = 0.8
         elif LENTH >= 30000:
-            KOEF = 0.2
+            KOEF = 0.4
         elif LENTH >= 80000:
             KOEF = 1
         camera = Camera()
@@ -472,15 +493,20 @@ while running:
                 actual_lenth += camera.get_lent()
                 if camera.get_lent() >= 0:
                     SCORE += camera.get_lent() * KOEF
+            if mario.jumping:
+                SCORE += 0.1
             if mario.moving and not mario.shoting:
                 camera.update([mario.vekt, mario.x])
                 for sp in entities:
                     camera.apply(sp)
+
             if actual_lenth >= LENTH - 500:
                 # пример урона
                 if LIFES == 3:
                     mario.damage_mario()
                     wons += 1
+                    if BEST_SCORE == 0:
+                        BEST_SCORE = SCORE
                 LENTH, LIFES = won(LENTH)
                 break
             else:
