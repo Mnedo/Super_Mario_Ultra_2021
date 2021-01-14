@@ -141,11 +141,12 @@ class Mario(pygame.sprite.Sprite):
             self.moving = True
 
     def start_jump(self):
-        if self.potential == 0:
-            self.potential = 225
-            # self.potential = 150
-        else:
-            self.potential = 120
+        if pygame.sprite.spritecollideany(self, self.gr):
+            if self.potential == 0:
+                self.potential = 225
+                # self.potential = 150
+            else:
+                self.potential = 120
 
     def get_coords(self):
         return [self.rect.x, self.rect.y + self.rect.w]

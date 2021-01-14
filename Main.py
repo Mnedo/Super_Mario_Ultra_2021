@@ -6,7 +6,7 @@ import sys
 from Main_platform import MainPlatform
 from Mark import Mario
 from Objects import Mob
-from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next, Finish
+from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next #, Finish
 
 x_fin = 400
 class Camera:
@@ -261,6 +261,7 @@ def lost(fps):
     return 0
 
 
+
 def won(LENTH):
     pygame.init()
     size = WIDTH, HEIGHT
@@ -314,6 +315,8 @@ def won(LENTH):
         pygame.display.flip()
 
 
+
+
 # LENTH = 1200
 # LIFES = 1
 # test variant
@@ -328,14 +331,22 @@ while running:
             fps_cahnge = 1
         LIFES = lost(fps_cahnge)
     else:
+        SCORE = 0
+        KOEF = 0.1
         fps_cahnge = 0
         actual_lenth = 0
         if wons == 0:
             LENTH = start_screen(LENTH)
         if LENTH >= 50000:
             LIFES = 1
+            KOEF = 0.5
+        elif LENTH >= 30000:
+            KOEF = 0.2
+        elif LENTH >= 80000:
+            KOEF = 1
         camera = Camera()
         pygame.init()
+        FONT = pygame.font.Font('Data/Mario_font.ttf', 15)
         pygame.mixer.init()
         sound = pygame.mixer.Sound('death_mob.wav')
         music = pygame.mixer.music.load('fon_music.mp3')
@@ -369,7 +380,7 @@ while running:
         counter = 0
 
         # Конец уровня - дерево
-        finish = Finish(LENTH - 480, 298, entities)
+        #finish = Finish(LENTH - 480, 298, entities)
 
         if LENTH == 5000:
             while end <= LENTH - 300:
@@ -392,7 +403,7 @@ while running:
         elif LENTH == 50000:
             while end <= LENTH - 200:
                 x = random.randint(bg, end)
-                y = 350
+                y = 370
                 platform = MainPlatform(x, y, False, LENTH)
                 entities.add(platform)
                 all_sprites.add(platform)
@@ -429,13 +440,38 @@ while running:
 
             screen.fill((0, 0, 0))
             screen.blit(load_image("Фон.png"), (0, 0))
+            #filll text
+            font = FONT
+            text_coord = 614
+            intro_text = ["   XP"]
+            for line in intro_text:
+                string_rendered = font.render(line, 4, pygame.Color('red'))
+                intro_rect = string_rendered.get_rect()
+                intro_rect.top = 18
+                intro_rect.x = text_coord
+                text_coord += intro_rect.height
+                screen.blit(string_rendered, intro_rect)
+            text = round(SCORE)
+            pr = " " * len(str(text))
+            intro_text = [str(text), *pr,"SCORE"]
+            for line in intro_text:
+                string_rendered = font.render(line, 4, pygame.Color('gold'))
+                intro_rect = string_rendered.get_rect()
+                intro_rect.top = 51
+                intro_rect.x = text_coord - 30 - len(str(text)) * 15
+                text_coord += intro_rect.height
+                screen.blit(string_rendered, intro_rect)
+            #
+
 
             LIFES = mario.update_lifes()
             hearts_gp = pygame.sprite.Group()
             for i in range(1, LIFES + 1):
-                heart = Heart(WIDTH - i * 40, 10, hearts_gp)
+                heart = Heart(WIDTH - 40 - i * 40, 10, hearts_gp)
             if mario.moving and not mario.shoting:
                 actual_lenth += camera.get_lent()
+                if camera.get_lent() >= 0:
+                    SCORE += camera.get_lent() * KOEF
             if mario.moving and not mario.shoting:
                 camera.update([mario.vekt, mario.x])
                 for sp in entities:

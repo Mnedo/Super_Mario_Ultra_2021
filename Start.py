@@ -304,6 +304,8 @@ class Next(pygame.sprite.Sprite):
 
 
 class Finish(pygame.sprite.Sprite):
+    pass
+    """
     image = load_image("Tree_fin.png")
     image = pygame.transform.scale(image, (300, 300))
 
@@ -313,3 +315,4 @@ class Finish(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+    """
