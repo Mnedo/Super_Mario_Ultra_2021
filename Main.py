@@ -6,7 +6,7 @@ import sys
 from Main_platform import MainPlatform
 from Mark import Mario
 from Objects import Mob
-from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next #, Finish
+from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next, Finish
 
 x_fin = 400
 class Camera:
@@ -389,6 +389,7 @@ while running:
         earth = pygame.sprite.Group()
         entities = pygame.sprite.Group()
         mob_sprites = pygame.sprite.Group()
+        clouds = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         mario = Mario(20, 500, all_sprites)
         mob = Mob(mob_sprites)
@@ -401,7 +402,7 @@ while running:
         counter = 0
 
         # Конец уровня - дерево
-        #finish = Finish(LENTH - 480, 298, entities)
+        finish = Finish(LENTH - 455, 298, clouds)
 
         if LENTH == 5000:
             while end <= LENTH - 300:
@@ -499,6 +500,8 @@ while running:
                 camera.update([mario.vekt, mario.x])
                 for sp in entities:
                     camera.apply(sp)
+                for sp in clouds:
+                    camera.apply(sp)
 
             if actual_lenth >= LENTH - 500:
                 # пример урона
@@ -526,8 +529,11 @@ while running:
 
                 mob_sprites.update()
                 mob_sprites.draw(screen)
-                all_sprites.update()
-                all_sprites.draw(screen)
+
+                clouds.update()
+                clouds.draw(screen)
+                mario_sprites.update()
+                mario_sprites.draw(screen)
                 hearts_gp.draw(screen)
                 entities.draw(screen)
                 clock.tick(30)
