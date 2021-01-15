@@ -343,7 +343,7 @@ def won(LENTH):
 
 
 # LENTH = 1800
-# LIFES = 1
+# LIFES = 999
 # test variant
 BEST_SCORE = 0
 while running:
@@ -373,10 +373,10 @@ while running:
         camera = Camera()
         pygame.init()
         FONT = pygame.font.Font('Data/Mario_font.ttf', 15)
-        pygame.mixer.init()
-        sound = pygame.mixer.Sound('death_mob.wav')
-        music = pygame.mixer.music.load('fon_music.mp3')
-        pygame.mixer.music.play(-1)
+        # pygame.mixer.init()
+        # sound = pygame.mixer.Sound('death_mob.wav')
+        # music = pygame.mixer.music.load('fon_music.mp3')
+        # pygame.mixer.music.play(-1)
         size = WIDTH, HEIGHT
         screen = pygame.display.set_mode(size)
         pygame.display.set_caption('Mario ultra 2021')
@@ -536,7 +536,8 @@ while running:
                     camera.apply(sp)
                 for sp in mob_sprites:
                     if str(type(sp)) != "<class 'Objects.Mob'>":
-                        camera.apply(sp)
+                        if not sp.killed:
+                            camera.apply(sp)
 
             if actual_lenth >= LENTH - 500:
                 # пример урона
@@ -556,16 +557,21 @@ while running:
                             counter = 0
                             mob.again()
                         mario.fall(mob, mob.get_coords())
-                        mob.fall(mario, mario.return_shot(), mario.get_coords())
-                        if mario.check_fall(mob) and not mob.check_fall() and not mario.shoting:
+                        mob.fall(mario, mario.shoting, mario.get_coords())
+                        if mob.killed:
+                            if mob.snd:
+                                print('sound')
+                                mob.sound()
+                                SCORE += 20 * KOEF
+                            # sound.play()
+                        if mario.check_fall(mob) and not mob.killed and not mario.shoting:
                             mario.potential_life = LIFES - 1
                         if mario.potential_life != LIFES:
                             mario.damage_mario()
                             mario.last_sprite = mob
                             break
-                        if mob.check_fall():
-                            sound.play()
-
+                        # if mob.check_fall():
+                        #     sound.play()
                 mob_sprites.update()
                 mob_sprites.draw(screen)
 

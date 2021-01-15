@@ -25,21 +25,25 @@ class Mob_Gumba(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.image = load_image("Mob_Gumba.png")
         self.mob_mask = pygame.mask.from_surface(self.image)
+        self.group = groups
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y - self.rect.h
         self.check = 0
         self.xod = 0
         self.coll = 0
+        self.killed = False
         self.traectory = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
                           3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
                           -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3,
                           -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3]
         self.count_mus = 0
+        self.snd = True
 
     def update(self):
-        self.rect.x += -self.traectory[self.xod]
-        self.xod += 1
+        if not self.killed:
+            self.rect.x += -self.traectory[self.xod]
+            self.xod += 1
         if self.xod == 68:
             self.xod = 0
 
@@ -48,14 +52,18 @@ class Mob_Gumba(pygame.sprite.Sprite):
 
     def fall(self, hero, shoting, pos):
         pos_m_x, pos_m_y = pos[0], pos[1]
+        # print(pos_m_x, pos_m_y, self.rect.x, self.rect.y)
         if not shoting and pygame.sprite.collide_mask(self, hero) and self.rect.y in list(
-                range(pos_m_y, pos_m_y + 10)):
+                range(pos_m_y, pos_m_y + 50)) and self.rect.x in list(range(pos_m_x - 50, pos_m_x + 50)):
             if self.check == 0:
                 self.coll = 1
         if self.coll == 1:
+            self.killed = True
             self.check = 1
-            self.rect.y += 5
-            self.rect.x -= 3
+            self.rect.y += 9
+            if self.rect.y >= 800:
+                self.remove(self.group)
+            # self.rect.x -= 3
 
     def check_fall(self):
         if self.count_mus == 0:
@@ -69,6 +77,9 @@ class Mob_Gumba(pygame.sprite.Sprite):
 
     def again(self):
         pass
+
+    def sound(self):
+        self.snd = False
 
 
 class Mob(pygame.sprite.Sprite):
@@ -81,10 +92,13 @@ class Mob(pygame.sprite.Sprite):
         self.rect.x = -900
         self.rect.y = 506
         self.check = 0
+        self.killed = False
         self.xod = 10
+        self.snd = True
 
     def move(self):
-        self.rect.x += self.xod
+        if not self.killed:
+            self.rect.x += self.xod
 
     def again(self):
         self.coll, self.count_mus = 0, 0
@@ -95,17 +109,19 @@ class Mob(pygame.sprite.Sprite):
         self.rect.x = -900  # зависит от размера спрайта
         self.check = 0
         self.xod = 10
+        self.killed = False
 
     def fall(self, hero, shoting, pos):
         pos_m_x, pos_m_y = pos[0], pos[1]
         if not shoting and pygame.sprite.collide_mask(self, hero) and self.rect.y in list(
-                range(pos_m_y, pos_m_y + 10)):
+                range(pos_m_y, pos_m_y + 50)) and self.rect.x in list(range(pos_m_x - 50, pos_m_x + 50)):
             if self.check == 0:
                 self.coll = 1
         if self.coll == 1:
+            self.killed = True
             self.check = 1
-            self.rect.y += 5
-            self.rect.x -= 3
+            self.rect.y += 10
+            self.rect.x -= 13
 
     def check_fall(self):
         if self.count_mus == 0:
@@ -116,6 +132,9 @@ class Mob(pygame.sprite.Sprite):
 
     def get_coords(self):
         return [self.rect.x, self.rect.y, self.coll]
+
+    def sound(self):
+        self.snd = False
 
 
 class MobOnBox(pygame.sprite.Sprite):
