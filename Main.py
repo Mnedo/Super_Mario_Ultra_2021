@@ -445,11 +445,18 @@ while running:
             i += 1
             x, y = ent.rect.x, ent.rect.y
             if i == 1:
-                pass
+                if LENTH <= 5000:
+                    z = 3
+                elif LENTH == 30000:
+                    z = 18
+                elif LENTH >= 50000:
+                    z = 33
+                for j in range(z):
+                    elemental = Mob_Gumba(x + j * (LENTH - 600 / z) + 300, y, mob_sprites)
                 # spawn by main platform
             else:
-                if i % 3 == 1:
-                    elemental = Mob_Gumba(x, y, mob_sprites)
+                if i % 5 == 0:
+                    elemental = Mob_Gumba(x + 50, y, mob_sprites)
 
         mario.set_walls(entities)
         mario.set_group(mario_sprites)
@@ -528,7 +535,8 @@ while running:
                 for sp in clouds:
                     camera.apply(sp)
                 for sp in mob_sprites:
-                    camera.apply(sp)
+                    if str(type(sp)) != "<class 'Objects.Mob'>":
+                        camera.apply(sp)
 
             if actual_lenth >= LENTH - 500:
                 # пример урона

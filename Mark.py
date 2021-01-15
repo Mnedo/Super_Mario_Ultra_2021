@@ -155,7 +155,6 @@ class Mario(pygame.sprite.Sprite):
         return [self.rect.x, self.rect.y + self.rect.w]
 
     def damage_mario(self):
-        print(self.xod_shot, self.shoting, self.lifes)
         self.xod_shot += 1
         if self.xod_shot >= 20 and self.lifes != 0:
             self.shoting = False
