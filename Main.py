@@ -237,7 +237,12 @@ def lost(fps):
                 pygame.quit()
                 sys.exit()
     screen.fill((0, 0, 0))
-    screen.blit(load_image("Фон.png"), (0, 0))
+    if LENTH <= 5000:
+        screen.blit(load_image("fon_level1.png"), (0, 0))
+    elif LENTH == 30000:
+        screen.blit(load_image("fon_level2.jpg"), (0, 0))
+    elif LENTH >= 50000:
+        screen.blit(load_image("fon_level3.png"), (0, 0))
     mob_sprites.draw(screen)
     all_sprites.draw(screen)
     entities.draw(screen)
@@ -337,7 +342,7 @@ def won(LENTH):
 
 
 
-# LENTH = 1200
+LENTH = 1800
 # LIFES = 1
 # test variant
 BEST_SCORE = 0
@@ -392,6 +397,7 @@ while running:
         clouds = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         mario = Mario(20, 500, all_sprites)
+        mario.potential_life = LIFES
         mob = Mob(mob_sprites)
 
         platform = MainPlatform(0, 580, True, LENTH)
@@ -461,10 +467,10 @@ while running:
 
 
             screen.fill((0, 0, 0))
-            if LENTH == 5000:
+            if LENTH <= 5000:
                 screen.blit(load_image("fon_level1.png"), (0, 0))
             elif LENTH == 30000:
-                screen.blit(load_image("fon_level2.png"), (0, 0))
+                screen.blit(load_image("fon_level2.jpg"), (0, 0))
             elif LENTH >= 50000:
                 screen.blit(load_image("fon_level3.png"), (0, 0))
             #filll text
@@ -508,13 +514,18 @@ while running:
                 for sp in clouds:
                     camera.apply(sp)
 
-            if actual_lenth >= LENTH - 500:
+            if actual_lenth >= LENTH - 800:
                 # пример урона
                 if LIFES == 3:
                     mario.damage_mario()
-                    wons += 1
-                    if BEST_SCORE == 0:
-                        BEST_SCORE = SCORE
+            if actual_lenth >= LENTH - 500:
+                # пример урона
+                if LIFES == 3:
+                    print(1)
+                    mario.damage_mario()
+                wons += 1
+                if BEST_SCORE == 0 or BEST_SCORE >= SCORE:
+                    BEST_SCORE = SCORE
                 LENTH, LIFES = won(LENTH)
                 break
             else:
@@ -528,7 +539,13 @@ while running:
                     # марио потеряет жизнь, если ты вставешь строку #mario.damage_mario() - сделай с этим все, что нужно :D
                     # Нужно чтобы моб "дамжил" марио, пока тот счетчик жизни не изменится (типа анимация урона)
                     # дойдя до конца есть пример
-                mob.fall(mario, mario.get_coords())
+                mario.fall(mob, mob.get_coords())
+                mob.fall(mario, mario.return_shot(), mario.get_coords())
+                if mario.check_fall(mob) and not mob.check_fall() and not mario.shoting:
+                    mario.potential_life = LIFES - 1
+                if mario.potential_life != LIFES:
+                    mario.damage_mario()
+
                 if mob.check_fall():
                     sound.play()
 

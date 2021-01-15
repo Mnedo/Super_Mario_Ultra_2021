@@ -74,6 +74,33 @@ class Mob(pygame.sprite.Sprite):
                 return True
         return False
 
+    def fall(self, hero, shoting, pos):
+        pos_m_x, pos_m_y = pos[0], pos[1]
+        if not shoting and pygame.sprite.collide_mask(self, hero) and self.rect.y in list(
+                range(pos_m_y, pos_m_y + 10)):
+            if self.check == 0:
+                self.coll = 1
+        if self.coll == 1:
+            self.check = 1
+            self.rect.y += 5
+            self.rect.x -= 3
+        #     return True
+        # return False
+
+    def check_fall(self):
+        if self.count_mus == 0:
+            if self.coll == 1:
+                self.count_mus = 1
+                return True
+        return False
+
+    def get_coords(self):
+        return [self.rect.x, self.rect.y, self.coll]
+
+    def speed(self):
+        self.rect.x += 10
+        self.xod = 5
+
 
 class MobOnBox(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, *group):  # пока оставлю эти вводимые данным, мб потом еще
@@ -95,6 +122,7 @@ class MobOnBox(pygame.sprite.Sprite):
                 "Mob_mushroom_kill15.png", "Mob_mushroom_kill16.png", "Mob_mushroom_kill17.png", ]
         self.image = load_image(kill[number])
         self.rect.y += 2
+
 
     # def life(self):
     #     self.rect.x = self.rect.x

@@ -48,9 +48,11 @@ class Mario(pygame.sprite.Sprite):
         self.zn = False
         self.last_res = True
         self.potential = 0
+        self.potential_life = 0
         self.lifes = 0
         self.dash = 0
         self.mn = [400, 580]
+        self.damage = [-15, -20, -20, -20, -20, -15, -15, -10, -10, -10, 10, 10, 10, 15, 20, 20, 20, 20, 15, 15]
 
     def set_walls(self, gr):
         self.gr = gr
@@ -153,6 +155,7 @@ class Mario(pygame.sprite.Sprite):
 
     def damage_mario(self):
         self.xod_shot += 1
+        print(self.shoting)
         if self.xod_shot >= 20 and self.lifes != 0:
             self.shoting = False
             self.xod_shot = 0
@@ -182,6 +185,7 @@ class Mario(pygame.sprite.Sprite):
                         self.image = Mario.image_damger1
                     else:
                         self.image = Mario.image_damgel1
+            self.rect.y -= -self.damage[self.xod_shot]
 
     def update_lifes(self):
         return self.lifes
@@ -191,6 +195,27 @@ class Mario(pygame.sprite.Sprite):
             return self.dash
         else:
             return 0
+
+    def fall(self, mob, pos):
+        # self.check, self.coll = 0, 0
+        pos_m_x, pos_m_y, m_coll = pos[0], pos[1], pos[2]
+        if m_coll == 0 and pygame.sprite.collide_mask(self, mob) and self.damage == 0:
+            self.coll = 1
+        # if self.coll == 1 and self.damage == 0:
+        #     self.damage = 1
+        #     return True
+        # return False
+
+    def check_fall(self, mob):
+        if pygame.sprite.collide_mask(self, mob):
+            return True
+        return False
+
+    def return_shot(self):
+        return self.shoting
+
+    def if_kill(self):
+        self.damage = 0
 
 
 """
