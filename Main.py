@@ -5,7 +5,7 @@ import sys
 
 from Main_platform import MainPlatform
 from Mark import Mario
-from Objects import Mob
+from Objects import Mob, Mob_Gumba
 from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next, Finish
 
 x_fin = 400
@@ -342,7 +342,7 @@ def won(LENTH):
 
 
 
-LENTH = 1800
+# LENTH = 1800
 # LIFES = 1
 # test variant
 BEST_SCORE = 0
@@ -400,6 +400,8 @@ while running:
         mario.potential_life = LIFES
         mob = Mob(mob_sprites)
 
+
+
         platform = MainPlatform(0, 580, True, LENTH)
         entities.add(platform)
         all_sprites.add(platform)
@@ -437,6 +439,18 @@ while running:
                 all_sprites.add(platform)
                 bg += 400
                 end += 550
+
+        i = 0
+        for ent in entities:
+            i += 1
+            x, y = ent.rect.x, ent.rect.y
+            if i == 1:
+                pass
+                # spawn by main platform
+            else:
+                if i % 3 == 1:
+                    elemental = Mob_Gumba(x, y, mob_sprites)
+
         mario.set_walls(entities)
         mario.set_group(mario_sprites)
         mario.set_lifes(LIFES)
@@ -513,41 +527,36 @@ while running:
                     camera.apply(sp)
                 for sp in clouds:
                     camera.apply(sp)
+                for sp in mob_sprites:
+                    camera.apply(sp)
 
-            if actual_lenth >= LENTH - 800:
-                # пример урона
-                if LIFES == 3:
-                    mario.damage_mario()
             if actual_lenth >= LENTH - 500:
                 # пример урона
-                if LIFES == 3:
-                    print(1)
-                    mario.damage_mario()
                 wons += 1
                 if BEST_SCORE == 0 or BEST_SCORE >= SCORE:
                     BEST_SCORE = SCORE
                 LENTH, LIFES = won(LENTH)
                 break
             else:
-                mob.move()
-                counter += 1
-                if counter == int(3000 * KOEF):
-                    counter = 0
-
-                    mob.again()
-
-                    # марио потеряет жизнь, если ты вставешь строку #mario.damage_mario() - сделай с этим все, что нужно :D
-                    # Нужно чтобы моб "дамжил" марио, пока тот счетчик жизни не изменится (типа анимация урона)
-                    # дойдя до конца есть пример
-                mario.fall(mob, mob.get_coords())
-                mob.fall(mario, mario.return_shot(), mario.get_coords())
-                if mario.check_fall(mob) and not mob.check_fall() and not mario.shoting:
-                    mario.potential_life = LIFES - 1
-                if mario.potential_life != LIFES:
-                    mario.damage_mario()
-
-                if mob.check_fall():
-                    sound.play()
+                for mob in mob_sprites:
+                    if mario.shoting and mario.last_sprite != mob:
+                        pass
+                    else:
+                        mob.move()
+                        counter += 1
+                        if counter == int(3000 * (1 - KOEF)):
+                            counter = 0
+                            mob.again()
+                        mario.fall(mob, mob.get_coords())
+                        mob.fall(mario, mario.return_shot(), mario.get_coords())
+                        if mario.check_fall(mob) and not mob.check_fall() and not mario.shoting:
+                            mario.potential_life = LIFES - 1
+                        if mario.potential_life != LIFES:
+                            mario.damage_mario()
+                            mario.last_sprite = mob
+                            break
+                        if mob.check_fall():
+                            sound.play()
 
                 mob_sprites.update()
                 mob_sprites.draw(screen)

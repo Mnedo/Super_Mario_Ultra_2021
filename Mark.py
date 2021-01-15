@@ -53,6 +53,7 @@ class Mario(pygame.sprite.Sprite):
         self.dash = 0
         self.mn = [400, 580]
         self.damage = [-15, -20, -20, -20, -20, -15, -15, -10, -10, -10, 10, 10, 10, 15, 20, 20, 20, 20, 15, 15]
+        self.last_sprite = 0
 
     def set_walls(self, gr):
         self.gr = gr
@@ -154,8 +155,8 @@ class Mario(pygame.sprite.Sprite):
         return [self.rect.x, self.rect.y + self.rect.w]
 
     def damage_mario(self):
+        print(self.xod_shot, self.shoting, self.lifes)
         self.xod_shot += 1
-        print(self.shoting)
         if self.xod_shot >= 20 and self.lifes != 0:
             self.shoting = False
             self.xod_shot = 0

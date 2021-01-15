@@ -38,13 +38,13 @@ class Mob_Gumba(pygame.sprite.Sprite):
         self.count_mus = 0
 
     def update(self):
-        self.rect.x += self.traectory[self.xod]
+        self.rect.x += -self.traectory[self.xod]
         self.xod += 1
         if self.xod == 68:
             self.xod = 0
 
     def move(self):
-        self.rect.x += self.xod
+        pass
 
     def fall(self, hero, shoting, pos):
         pos_m_x, pos_m_y = pos[0], pos[1]
