@@ -20,59 +20,31 @@ def load_image(name, colorkey=None):
     return image
 
 
-class Mob(pygame.sprite.Sprite):
-    def __init__(self, *group):
-        super().__init__(*group)
-        self.coll, self.count_mus = 0, 0
-        randomchik = random.randint(0, 1)
-        if randomchik:
-            self.image = load_image("Mob_Gumba.png")
-        else:
-            self.image = load_image("Mob_Cupa.png")
+class Mob_Gumba(pygame.sprite.Sprite):
+    def __init__(self, x, y, *groups):
+        super().__init__(*groups)
+        self.image = load_image("Mob_Gumba.png")
         self.mob_mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.rect.x = -200
-        if randomchik:
-            self.rect.y = 533
-        else:
-            self.rect.y = 506
+        self.rect.x = x
+        self.rect.y = y - self.rect.h
         self.check = 0
+        self.xod = 0
+        self.coll = 0
+        self.traectory = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                          -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3,
+                          -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3]
+        self.count_mus = 0
+
+    def update(self):
+        self.rect.x += self.traectory[self.xod]
+        self.xod += 1
+        if self.xod == 68:
+            self.xod = 0
 
     def move(self):
-        self.rect.x += 3
-
-    def again(self):
-        self.coll, self.count_mus = 0, 0
-        randomchik = random.randint(0, 1)
-        if randomchik:
-            self.image = load_image("Mob_Gumba.png")
-        else:
-            self.image = load_image("Mob_Cupa.png")
-        self.mob_mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect()
-        if randomchik:
-            self.rect.y = 533
-        else:
-            self.rect.y = 506
-        self.rect.x = -100  # зависит от размера спрайта
-        self.check = 0
-
-    def fall(self, hero, pos):
-        pos_m_x, pos_m_y = pos[0], pos[1]
-        if pygame.sprite.collide_mask(self, hero) and self.rect.y in list(range(pos_m_y, pos_m_y + 10)):
-            if self.check == 0:
-                self.coll = 1
-        if self.coll == 1:
-            self.check = 1
-            self.rect.y += 5
-            self.rect.x -= 3
-
-    def check_fall(self):
-        if self.count_mus == 0:
-            if self.coll == 1:
-                self.count_mus = 1
-                return True
-        return False
+        self.rect.x += self.xod
 
     def fall(self, hero, shoting, pos):
         pos_m_x, pos_m_y = pos[0], pos[1]
@@ -84,8 +56,6 @@ class Mob(pygame.sprite.Sprite):
             self.check = 1
             self.rect.y += 5
             self.rect.x -= 3
-        #     return True
-        # return False
 
     def check_fall(self):
         if self.count_mus == 0:
@@ -97,9 +67,55 @@ class Mob(pygame.sprite.Sprite):
     def get_coords(self):
         return [self.rect.x, self.rect.y, self.coll]
 
-    def speed(self):
-        self.rect.x += 10
-        self.xod = 5
+    def again(self):
+        pass
+
+
+class Mob(pygame.sprite.Sprite):
+    def __init__(self, *group):
+        super().__init__(*group)
+        self.coll, self.count_mus = 0, 0
+        self.image = load_image("Mob_Cupa.png")
+        self.mob_mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect()
+        self.rect.x = -900
+        self.rect.y = 506
+        self.check = 0
+        self.xod = 10
+
+    def move(self):
+        self.rect.x += self.xod
+
+    def again(self):
+        self.coll, self.count_mus = 0, 0
+        self.image = load_image("Mob_Cupa.png")
+        self.mob_mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect()
+        self.rect.y = 506
+        self.rect.x = -900  # зависит от размера спрайта
+        self.check = 0
+        self.xod = 10
+
+    def fall(self, hero, shoting, pos):
+        pos_m_x, pos_m_y = pos[0], pos[1]
+        if not shoting and pygame.sprite.collide_mask(self, hero) and self.rect.y in list(
+                range(pos_m_y, pos_m_y + 10)):
+            if self.check == 0:
+                self.coll = 1
+        if self.coll == 1:
+            self.check = 1
+            self.rect.y += 5
+            self.rect.x -= 3
+
+    def check_fall(self):
+        if self.count_mus == 0:
+            if self.coll == 1:
+                self.count_mus = 1
+                return True
+        return False
+
+    def get_coords(self):
+        return [self.rect.x, self.rect.y, self.coll]
 
 
 class MobOnBox(pygame.sprite.Sprite):

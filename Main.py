@@ -531,7 +531,7 @@ while running:
             else:
                 mob.move()
                 counter += 1
-                if counter == 1000:
+                if counter == int(3000 * KOEF):
                     counter = 0
 
                     mob.again()

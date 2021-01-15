@@ -14,11 +14,11 @@ class MainPlatform(sprite.Sprite):
     def __init__(self, x, y, flag, LENTH):
         if not flag:
             sprite.Sprite.__init__(self)
-            if LENTH == 5000:
+            if LENTH <= 5000:
                 dl = 204
             elif LENTH == 30000:
                 dl = 154
-            elif LENTH == 50000:
+            elif LENTH >= 50000:
                 dl = 100
             self.image = Surface((dl, 30))
             self.image.fill(Color(PLATFORM_COLOR))
