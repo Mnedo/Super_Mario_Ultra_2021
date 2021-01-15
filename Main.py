@@ -461,7 +461,12 @@ while running:
 
 
             screen.fill((0, 0, 0))
-            screen.blit(load_image("Фон.png"), (0, 0))
+            if LENTH == 5000:
+                screen.blit(load_image("fon_level1.png"), (0, 0))
+            elif LENTH == 30000:
+                screen.blit(load_image("fon_level2.png"), (0, 0))
+            elif LENTH >= 50000:
+                screen.blit(load_image("fon_level3.png"), (0, 0))
             #filll text
             font = FONT
             text_coord = 614
