@@ -586,7 +586,7 @@ while running:
                     else:
                         mob.move()
                         counter += 1
-                        if counter >= int(20000 * (1 - KOEF)) and str(type(mob)) == "<class 'Objects.Mob'>":
+                        if counter >= int(20000 * KOEF) and str(type(mob)) == "<class 'Objects.Mob'>":
                             counter = 0
                             mob.again()
                         mario.fall(mob, mob.get_coords())
@@ -598,6 +598,11 @@ while running:
                         elif mob.killed and str(type(mob)) == "<class 'Objects.MobBonus'>":
                             if mob.snd:
                                 mob.sound()
+                                if LIFES != 3:
+                                    LIFES += 1
+                                    mario.lifes += 1
+                                    mario.potential_life += 1
+                                    LIFES = mario.update_lifes()
                                 SCORE += 200
                         if mario.check_fall(mob) and not mob.killed and not mario.shoting:
                             mario.potential_life = LIFES - 1
@@ -614,9 +619,6 @@ while running:
                                 sound_bonus.play()
                             else:
                                 sound_mob_death.play()
-                # mob_sprites.update()
-                # mob_sprites.draw(screen)
-
                 clouds.update()
                 clouds.draw(screen)
                 mob_sprites.update()
