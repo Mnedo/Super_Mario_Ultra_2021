@@ -406,39 +406,42 @@ while running:
         entities.add(platform)
         all_sprites.add(platform)
         bg = 100
-        end = 200
+        end = 305
         counter = 0
 
         # Конец уровня - дерево
         finish = Finish(LENTH - 455, 298, clouds)
 
         if LENTH == 5000:
-            while end <= LENTH - 300:
+            while end <= LENTH - 350:
                 x = random.randint(bg, end)
                 y = 400
+                bg = end
                 platform = MainPlatform(x, y, False, LENTH)
                 entities.add(platform)
                 all_sprites.add(platform)
-                bg += 600
-                end += 910
+                bg += 360
+                end += 780
         elif LENTH == 30000:
             while end <= LENTH - 200:
                 x = random.randint(bg, end)
                 y = 400
+                bg = end
                 platform = MainPlatform(x, y, False, LENTH)
                 entities.add(platform)
                 all_sprites.add(platform)
-                bg += 400
-                end += 650
+                bg += 290
+                end += 700
         elif LENTH == 50000:
             while end <= LENTH - 200:
                 x = random.randint(bg, end)
                 y = 370
+                bg = end
                 platform = MainPlatform(x, y, False, LENTH)
                 entities.add(platform)
                 all_sprites.add(platform)
-                bg += 400
-                end += 550
+                bg += 220
+                end += 650
 
         i = 0
         for ent in entities:
