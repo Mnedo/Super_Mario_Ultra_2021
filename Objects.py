@@ -106,7 +106,7 @@ class Mob(pygame.sprite.Sprite):
         self.mob_mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.y = 506
-        self.rect.x = -900  # зависит от размера спрайта
+        self.rect.x = -900 # зависит от размера спрайта
         self.check = 0
         self.xod = 10
         self.killed = False

@@ -553,7 +553,7 @@ while running:
                     else:
                         mob.move()
                         counter += 1
-                        if counter == int(3000 * (1 - KOEF)):
+                        if counter >= int(1500 * (1 - KOEF)) and str(type(mob)) == "<class 'Objects.Mob'>":
                             counter = 0
                             mob.again()
                         mario.fall(mob, mob.get_coords())
