@@ -1,6 +1,5 @@
 import pygame
 from pygame import *
-import random
 
 
 WIN_WIDTH = 1300

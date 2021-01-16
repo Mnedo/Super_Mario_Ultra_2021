@@ -326,4 +326,4 @@ class Clouds(pygame.sprite.Sprite):
         self.image = Clouds.cloud_image
         self.rect = self.image.get_rect()
         self.rect.x = cl
-        self.rect.y = random.randint(0, 150)
+        self.rect.y = random.randint(-50, 150)
