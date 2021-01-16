@@ -411,10 +411,19 @@ while running:
 
         # Конец уровня - дерево
         finish = Finish(LENTH - 455, 298, clouds)
+
+        # Облака
         x_cloud = 0
+        if LENTH == 50000:
+            cloud = False
+            z = 330
+        else:
+            cloud = True
+            z = 330
         while x_cloud <= LENTH:
-            rrr = Clouds(x_cloud, clouds)
-            x_cloud += 330
+            rrr = Clouds(x_cloud, cloud, clouds)
+            x_cloud += z
+        # Конец облаков
 
         if LENTH == 5000:
             while end <= LENTH - 350:

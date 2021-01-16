@@ -320,10 +320,19 @@ class Finish(pygame.sprite.Sprite):
 class Clouds(pygame.sprite.Sprite):
     cloud_image = load_image("cloud.png")
     cloud_image = pygame.transform.scale(cloud_image, (300, 150))
+    chert_image = load_image("chert.png")
+    chert_image = pygame.transform.scale(chert_image, (250, 100))
 
-    def __init__(self, cl, *gr):
-        super().__init__(gr)
-        self.image = Clouds.cloud_image
-        self.rect = self.image.get_rect()
-        self.rect.x = cl
-        self.rect.y = random.randint(-50, 150)
+    def __init__(self, cl, flag, *gr):
+        if flag:
+            super().__init__(gr)
+            self.image = Clouds.cloud_image
+            self.rect = self.image.get_rect()
+            self.rect.x = cl
+            self.rect.y = random.randint(0, 150)
+        else:
+            super().__init__(gr)
+            self.image = Clouds.chert_image
+            self.rect = self.image.get_rect()
+            self.rect.x = cl
+            self.rect.y = random.randint(0, 120)
