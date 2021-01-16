@@ -1,3 +1,5 @@
+import random
+
 import pygame, os, sys
 
 
@@ -313,3 +315,15 @@ class Finish(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+
+class Clouds(pygame.sprite.Sprite):
+    cloud_image = load_image("cloud.png")
+    cloud_image = pygame.transform.scale(cloud_image, (300, 150))
+
+    def __init__(self, cl, *gr):
+        super().__init__(gr)
+        self.image = Clouds.cloud_image
+        self.rect = self.image.get_rect()
+        self.rect.x = cl
+        self.rect.y = random.randint(0, 150)

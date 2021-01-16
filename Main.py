@@ -6,7 +6,7 @@ import sys
 from Main_platform import MainPlatform
 from Mark import Mario
 from Objects import Mob, Mob_Gumba
-from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next, Finish
+from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next, Finish, Clouds
 
 x_fin = 400
 class Camera:
@@ -411,6 +411,10 @@ while running:
 
         # Конец уровня - дерево
         finish = Finish(LENTH - 455, 298, clouds)
+        x_cloud = 0
+        while x_cloud <= LENTH:
+            rrr = Clouds(x_cloud, clouds)
+            x_cloud += 330
 
         if LENTH == 5000:
             while end <= LENTH - 350:
