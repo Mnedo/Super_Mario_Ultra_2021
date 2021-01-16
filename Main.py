@@ -5,7 +5,7 @@ import sys
 
 from Main_platform import MainPlatform
 from Mark import Mario
-from Objects import Mob, Mob_Gumba
+from Objects import Mob, MobGumba, MobBonus, MobMushroom
 from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next, Finish, Clouds
 
 x_fin = 400
@@ -314,6 +314,8 @@ def won(LENTH):
                     sys.exit()
         screen.fill((0, 0, 0))
         screen.blit(load_image("Won_screen.png"), (0, 0))
+        sound_mario_victory.play()
+        pygame.mixer.music.stop()
         font = FONT
         text_coord = 218
         intro_text = ["YOUR SCORE: " + str(round(SCORE))]
@@ -347,6 +349,13 @@ def won(LENTH):
 # test variant
 BEST_SCORE = 0
 while running:
+    pygame.mixer.init()
+    sound_mob_death = pygame.mixer.Sound('death_mob.wav')
+    sound_mario_damage = pygame.mixer.Sound('mario_damage.mp3')
+    sound_mario_losing = pygame.mixer.Sound('mario_losing.mp3')
+    sound_mario_victory = pygame.mixer.Sound('mario_victory.mp3')
+    sound_bonus = pygame.mixer.Sound('mus_bonus.mp3')
+    pygame.mixer.music.load('fon_music.mp3')
     der = True
     if LIFES == 0:
         if fps_cahnge == 0:
@@ -356,6 +365,8 @@ while running:
         if fps_cahnge > 3:
             fps_cahnge = 1
         LIFES = lost(fps_cahnge)
+        pygame.mixer.music.stop()
+        print(LIFES)
     else:
         SCORE = 0
         KOEF = 0.1
@@ -468,11 +479,15 @@ while running:
                 elif LENTH >= 50000:
                     z = 33
                 for j in range(z):
-                    elemental = Mob_Gumba(x + j * (LENTH - 600 / z) + 300, y, mob_sprites)
+                    elemental = MobGumba(x + j * (LENTH - 600 / z) + 300, y, mob_sprites)
                 # spawn by main platform
             else:
                 if i % 5 == 0:
-                    elemental = Mob_Gumba(x + 50, y, mob_sprites)
+                    elemental = MobGumba(x + 50, y, mob_sprites)
+                elif i % 11 == 0:
+                    elemental = MobBonus(x, y, mob_sprites)
+                elif i % 8 == 0:
+                    elemental = MobMushroom(x, y + 3, mob_sprites)
 
         mario.set_walls(entities)
         mario.set_group(mario_sprites)
@@ -480,6 +495,8 @@ while running:
         image = load_image("mario_start.png")
         pygame.display.set_icon(image)
         old = 20
+        if LIFES != 0:
+            pygame.mixer.music.play(-1)
         while LIFES != 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -569,30 +586,41 @@ while running:
                     else:
                         mob.move()
                         counter += 1
-                        if counter >= int(1500 * (1 - KOEF)) and str(type(mob)) == "<class 'Objects.Mob'>":
+                        if counter >= int(20000 * (1 - KOEF)) and str(type(mob)) == "<class 'Objects.Mob'>":
                             counter = 0
                             mob.again()
                         mario.fall(mob, mob.get_coords())
                         mob.fall(mario, mario.shoting, mario.get_coords())
-                        if mob.killed:
+                        if mob.killed and str(type(mob)) != "<class 'Objects.MobBonus'>":
                             if mob.snd:
-                                print('sound')
                                 mob.sound()
                                 SCORE += 20 * KOEF
-                            # sound.play()
+                        elif mob.killed and str(type(mob)) == "<class 'Objects.MobBonus'>":
+                            if mob.snd:
+                                mob.sound()
+                                SCORE += 200
                         if mario.check_fall(mob) and not mob.killed and not mario.shoting:
                             mario.potential_life = LIFES - 1
                         if mario.potential_life != LIFES:
                             mario.damage_mario()
+                            if mario.potential_life == 0:
+                                sound_mario_losing.play()
+                            else:
+                                sound_mario_damage.play()
                             mario.last_sprite = mob
                             break
-                        # if mob.check_fall():
-                        #     sound.play()
-                mob_sprites.update()
-                mob_sprites.draw(screen)
+                        if mob.check_fall():
+                            if str(type(mob)) == "<class 'Objects.MobBonus'>":
+                                sound_bonus.play()
+                            else:
+                                sound_mob_death.play()
+                # mob_sprites.update()
+                # mob_sprites.draw(screen)
 
                 clouds.update()
                 clouds.draw(screen)
+                mob_sprites.update()
+                mob_sprites.draw(screen)
                 mario_sprites.update()
                 mario_sprites.draw(screen)
                 hearts_gp.draw(screen)

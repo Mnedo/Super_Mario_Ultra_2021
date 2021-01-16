@@ -1,7 +1,6 @@
 import pygame
 import os
 import sys
-import random
 
 
 def load_image(name, colorkey=None):
@@ -10,105 +9,38 @@ def load_image(name, colorkey=None):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
     image = pygame.image.load(fullname)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
     return image
 
 
-class Mob_Gumba(pygame.sprite.Sprite):
-    def __init__(self, x, y, *groups):
-        super().__init__(*groups)
-        self.image = load_image("Mob_Gumba.png")
-        self.mob_mask = pygame.mask.from_surface(self.image)
-        self.group = groups
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y - self.rect.h
-        self.check = 0
-        self.xod = 0
-        self.coll = 0
-        self.killed = False
-        self.traectory = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                          -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3,
-                          -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3]
-        self.count_mus = 0
-        self.snd = True
-
-    def update(self):
-        if not self.killed:
-            self.rect.x += -self.traectory[self.xod]
-            self.xod += 1
-        if self.xod == 68:
-            self.xod = 0
-
-    def move(self):
-        pass
-
-    def fall(self, hero, shoting, pos):
-        pos_m_x, pos_m_y = pos[0], pos[1]
-        # print(pos_m_x, pos_m_y, self.rect.x, self.rect.y)
-        if not shoting and pygame.sprite.collide_mask(self, hero) and self.rect.y in list(
-                range(pos_m_y, pos_m_y + 50)) and self.rect.x in list(range(pos_m_x - 50, pos_m_x + 50)):
-            if self.check == 0:
-                self.coll = 1
-        if self.coll == 1:
-            self.killed = True
-            self.check = 1
-            self.rect.y += 9
-            if self.rect.y >= 800:
-                self.remove(self.group)
-            # self.rect.x -= 3
-
-    def check_fall(self):
-        if self.count_mus == 0:
-            if self.coll == 1:
-                self.count_mus = 1
-                return True
-        return False
-
-    def get_coords(self):
-        return [self.rect.x, self.rect.y, self.coll]
-
-    def again(self):
-        pass
-
-    def sound(self):
-        self.snd = False
-
-
 class Mob(pygame.sprite.Sprite):
+    image_run = load_image("Mob_Cupa.png")
+    image_run1 = load_image("Mob_Cupa1.png")
+
     def __init__(self, *group):
         super().__init__(*group)
         self.coll, self.count_mus = 0, 0
-        self.image = load_image("Mob_Cupa.png")
+        self.picture = 0
+        self.image = Mob.image_run
         self.mob_mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = -900
         self.rect.y = 506
         self.check = 0
         self.killed = False
-        self.xod = 10
         self.snd = True
 
     def move(self):
         if not self.killed:
-            self.rect.x += self.xod
+            self.rect.x += 10
 
     def again(self):
         self.coll, self.count_mus = 0, 0
-        self.image = load_image("Mob_Cupa.png")
+        self.image = Mob.image_run
         self.mob_mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.y = 506
-        self.rect.x = -900 # зависит от размера спрайта
+        self.rect.x = -100
         self.check = 0
-        self.xod = 10
         self.killed = False
 
     def fall(self, hero, shoting, pos):
@@ -136,84 +68,208 @@ class Mob(pygame.sprite.Sprite):
     def sound(self):
         self.snd = False
 
+    def update(self):
+        if self.picture:
+            self.image = Mob.image_run1
+            self.picture = 0
+            self.mob_mask = pygame.mask.from_surface(self.image)
+        else:
+            self.image = Mob.image_run
+            self.picture = 1
+            self.mob_mask = pygame.mask.from_surface(self.image)
 
-class MobOnBox(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, *group):  # пока оставлю эти вводимые данным, мб потом еще
-        # понадобится что-то из этого
-        super().__init__(*group)
-        # self.image = load_image("Mob_flower.png")  позже доделаю и этого персонажа
-        self.image = load_image("Mob_mushroom.png")
+
+class MobGumba(pygame.sprite.Sprite):
+    def __init__(self, x, y, *groups):
+        super().__init__(*groups)
+        self.image = load_image("Mob_Gumba.png")
+        self.mob_mask = pygame.mask.from_surface(self.image)
+        self.group = groups
         self.rect = self.image.get_rect()
-        self.rect.x = x + width // 2 - 25
-        self.rect.y = y + 50
-        # self.rect.x = width
-        # self.rect.y = height
+        self.rect.x = x
+        self.rect.y = y - self.rect.h
+        self.check = 0
+        self.xod = 0
+        self.coll = 0
+        self.killed = False
+        self.traectory = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                          3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                          -3, -3, -3, -3, -3, -3, -3, -3, -3, -3,
+                          -3, -3, -3, -3, -3, -3, -3, -3, -3, -3]
+        self.count_mus = 0
+        self.snd = True
 
-    def update(self, number):
-        kill = ["Mob_mushroom_kill1.png", "Mob_mushroom_kill2.png", "Mob_mushroom_kill3.png", "Mob_mushroom_kill4.png",
-                "Mob_mushroom_kill5.png", "Mob_mushroom_kill6.png", "Mob_mushroom_kill7.png", "Mob_mushroom_kill8.png",
-                "Mob_mushroom_kill9.png", "Mob_mushroom_kill10.png", "Mob_mushroom_kill11.png",
-                "Mob_mushroom_kill12.png", "Mob_mushroom_kill13.png", "Mob_mushroom_kill14.png",
-                "Mob_mushroom_kill15.png", "Mob_mushroom_kill16.png", "Mob_mushroom_kill17.png", ]
-        self.image = load_image(kill[number])
-        self.rect.y += 2
+    def update(self):
+        if not self.killed:
+            self.rect.x += -self.traectory[self.xod]
+            self.xod += 1
+        if self.xod == 40:
+            self.xod = 0
+
+    def move(self):
+        pass
+
+    def fall(self, hero, shoting, pos):
+        pos_m_x, pos_m_y = pos[0], pos[1]
+        if not shoting and pygame.sprite.collide_mask(self, hero) and self.rect.y in list(
+                range(pos_m_y, pos_m_y + 50)) and self.rect.x in list(range(pos_m_x - 50, pos_m_x + 50)):
+            if self.check == 0:
+                self.coll = 1
+        if self.coll == 1:
+            self.killed = True
+            self.check = 1
+            self.rect.y += 9
+            if self.rect.y >= 800:
+                self.remove(self.group)
+
+    def check_fall(self):
+        if self.count_mus == 0:
+            if self.coll == 1:
+                self.count_mus = 1
+                return True
+        return False
+
+    def get_coords(self):
+        return [self.rect.x, self.rect.y, self.coll]
+
+    def again(self):
+        pass
+
+    def sound(self):
+        self.snd = False
 
 
-    # def life(self):
-    #     self.rect.x = self.rect.x
-    #     self.rect.y = self.rect.y
+class MobBonus(pygame.sprite.Sprite):
+    def __init__(self, x, y, *groups):
+        super().__init__(*groups)
+        self.image = load_image("bonus.png")
+        self.mob_mask = pygame.mask.from_surface(self.image)
+        self.group = groups
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y - self.rect.h
+        self.check = 0
+        self.xod = 0
+        self.coll = 0
+        self.killed = False
+        self.count_mus = 0
+        self.snd = True
+
+    def update(self):
+        if not self.killed:
+            self.xod += 1
+        if self.xod == 40:
+            self.xod = 0
+
+    def move(self):
+        pass
+
+    def fall(self, hero, shoting, pos):
+        if not shoting and pygame.sprite.collide_mask(self, hero):
+            if self.check == 0:
+                self.coll = 1
+        if self.coll == 1:
+            self.image = load_image("text_bonus.png")
+            self.killed = True
+            self.check = 1
+            self.rect.y -= 9
+            if self.rect.y >= 800:
+                self.remove(self.group)
+
+    def check_fall(self):
+        if self.count_mus == 0:
+            if self.coll == 1:
+                self.count_mus = 1
+                return True
+        return False
+
+    def get_coords(self):
+        return [self.rect.x, self.rect.y, self.coll]
+
+    def again(self):
+        pass
+
+    def sound(self):
+        self.snd = False
 
 
-# pygame.init()
-# size = width, height = 700, 700
-# screen = pygame.display.set_mode(size)
-# screen.fill(pygame.Color('black'))
-# clock = pygame.time.Clock()
-# running = True
-#
-# all_sprites = pygame.sprite.Group()
-# sprite = pygame.sprite.Sprite()
-# mob = Mob(all_sprites)
-#
-# all_sprites2 = pygame.sprite.Group()
-# sprite2 = pygame.sprite.Sprite()
-# mob_on_box = MobOnBox(300, 200, 30, 30, all_sprites2)  # пример
-# mob_on_box2 = MobOnBox(400, 400, 50, 50, all_sprites2)  # пример
-# counter = 0
-# while running:
-#     screen.fill((0, 0, 0))
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             running = False
-#     mob.move()
-#     mob_on_box2.life()
-#     if counter == 2000:
-#         counter = 0
-#         mob.again()
-#     if mob.touch_jump(300, 500):  # Для примера. Позже я хочу сделать так, чтобы из класса платформы передавался
-#         # "знак", что моба убили
-#         for i in range(180):
-#             mob.fall()
-#             screen.fill((0, 0, 0))
-#             all_sprites.draw(screen)
-#             all_sprites2.draw(screen)
-#             pygame.display.update()
-#             clock.tick(100)
-#     if counter == 0:  # Тоже для примера. Позже я хочу сделать так, чтобы из класса платформы передавался
-#         # "знак", что моба убили
-#         for i in range(17):  # кол-во картинок
-#             mob_on_box.update(i)
-#             screen.fill((0, 0, 0))
-#             all_sprites2.draw(screen)
-#             pygame.display.update()
-#             clock.tick(15)
-#     all_sprites.draw(screen)
-#     all_sprites2.draw(screen)
-#     counter += 1
-#     pygame.display.update()
-#     clock.tick(260)
-# pygame.quit()
+class MobMushroom(pygame.sprite.Sprite):
+    image_run = load_image("Mob_mushroom.png")
+    kill = ["Mob_mushroom_kill1.png", "Mob_mushroom_kill2.png", "Mob_mushroom_kill3.png", "Mob_mushroom_kill4.png",
+            "Mob_mushroom_kill5.png", "Mob_mushroom_kill6.png", "Mob_mushroom_kill7.png", "Mob_mushroom_kill8.png",
+            "Mob_mushroom_kill9.png", "Mob_mushroom_kill10.png", "Mob_mushroom_kill11.png",
+            "Mob_mushroom_kill12.png", "Mob_mushroom_kill13.png", "Mob_mushroom_kill14.png",
+            "Mob_mushroom_kill15.png", "Mob_mushroom_kill16.png", "Mob_mushroom_kill17.png", ]
+
+    def __init__(self, x, y, *groups):
+        super().__init__(*groups)
+        self.image = load_image("Mob_mushroom.png")
+        self.mob_mask = pygame.mask.from_surface(self.image)
+        self.group = groups
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y - self.rect.h
+        self.check = 0
+        self.xod = 0
+        self.coll = 0
+        self.killed = False
+        self.count_mus = 0
+        self.snd = True
+        self.picture = 0
+
+    def update(self):
+        if not self.killed:
+            self.xod += 1
+        if self.xod == 40:
+            self.xod = 0
+
+    def move(self):
+        pass
+
+    def fall(self, hero, shoting, pos):
+        pos_m_x, pos_m_y = pos[0], pos[1]
+        if not shoting and pygame.sprite.collide_mask(self, hero) and self.rect.y in list(
+                range(pos_m_y, pos_m_y + 50)) and self.rect.x in list(range(pos_m_x - 50, pos_m_x + 50)):
+            if self.check == 0:
+                self.coll = 1
+        if self.coll == 1:
+            if self.picture == -1:
+                self.image = MobMushroom.image_run
+            self.image = load_image(MobMushroom.kill[self.picture])
+            self.mob_mask = pygame.mask.from_surface(self.image)
+            if self.picture != 17 and self.picture != -1:
+                if self.picture == 16:
+                    self.rect.y += 3
+                else:
+                    self.rect.y += 3
+            self.picture += 1
+            if self.picture == 17:
+                self.picture = -1
+                self.coll = 0
+                self.check = 0
+            self.killed = True
+            self.check = 1
+            # self.rect.y += 9
+            if self.rect.y >= 400:
+                self.remove(self.group)
+
+    def check_fall(self):
+        if self.count_mus == 0:
+            if self.coll == 1:
+                self.count_mus = 1
+                return True
+        return False
+
+    def get_coords(self):
+        return [self.rect.x, self.rect.y, self.coll]
+
+    def again(self):
+        pass
+
+    def sound(self):
+        self.snd = False
+
 
 """
-классы объектов
+КЛАССЫ ОБЪЕКТОВ
 """
