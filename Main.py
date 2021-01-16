@@ -366,7 +366,6 @@ while running:
             fps_cahnge = 1
         LIFES = lost(fps_cahnge)
         pygame.mixer.music.stop()
-        print(LIFES)
     else:
         SCORE = 0
         KOEF = 0.1
@@ -582,7 +581,7 @@ while running:
             else:
                 for mob in mob_sprites:
                     if mario.shoting and mario.last_sprite != mob:
-                        pass
+                        mob.move()
                     else:
                         mob.move()
                         counter += 1

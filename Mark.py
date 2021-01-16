@@ -52,7 +52,8 @@ class Mario(pygame.sprite.Sprite):
         self.lifes = 0
         self.dash = 0
         self.mn = [400, 580]
-        self.damage = [-15, -20, -20, -20, -20, -15, -15, -10, -10, -10, 10, 10, 10, 15, 20, 20, 20, 20, 15, 15]
+        self.damage = [-15, -20, -20, -20, -20, -15, -15, -10, -10, -10, 15, 20, 20, 20, 20, 15, 15, 10, 0, 0]
+        self.damage_x = [-5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, 0, 0, 0, 0, 0, 0, 0, 0]
         self.last_sprite = 0
 
     def set_walls(self, gr):
@@ -159,6 +160,8 @@ class Mario(pygame.sprite.Sprite):
         if self.xod_shot >= 20 and self.lifes != 0:
             self.shoting = False
             self.xod_shot = 0
+            if self.y >= 500:
+                self.y = 500
             self.lifes -= 1
             if self.lifes <= 0:
                 self.killed = True
@@ -186,6 +189,12 @@ class Mario(pygame.sprite.Sprite):
                     else:
                         self.image = Mario.image_damgel1
             self.rect.y -= -self.damage[self.xod_shot]
+            if self.vekt == -1:
+                self.rect.x -= self.damage_x[self.xod_shot]
+            elif self.vekt == 1:
+                self.rect.x -= -self.damage_x[self.xod_shot]
+            self.x = self.rect.x
+            self.y = self.rect.y
 
     def update_lifes(self):
         return self.lifes
