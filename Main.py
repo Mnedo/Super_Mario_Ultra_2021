@@ -16,11 +16,9 @@ class Camera:
         self.dy = 0
         self.dash = 0
 
-    # сдвинуть объект obj на смещение камеры
     def apply(self, obj):
         obj.rect.x += self.dx
 
-    # позиционировать камеру на объекте target
     def update(self, sp):
         self.mario_vekt = sp[0]
         self.mario_x = sp[1]
@@ -255,10 +253,8 @@ def lost(fps):
     elif fps_cahnge == 3:
         image_lost1 = load_image('game_over2.png')
         screen.blit(image_lost1, (0, 0))
-
     button_end_sprites.update()
     button_end_sprites.draw(screen)
-
     image = load_image("mario_start.png")
     pygame.display.set_icon(image)
     clock.tick(10)
@@ -276,7 +272,6 @@ def won(LENTH):
     pygame.display.set_caption('Mario ultra 2021')
     image = load_image("mario_start.png")
     pygame.display.set_icon(image)
-
     buttons = pygame.sprite.Group()
     quit_but = Quit(buttons)
     next_but = Next(buttons)
@@ -338,16 +333,10 @@ def won(LENTH):
             screen.blit(string_rendered, intro_rect)
         buttons.update()
         buttons.draw(screen)
-
         clock.tick(10)
         pygame.display.flip()
 
 
-
-
-# LENTH = 1800
-# LIFES = 999
-# test variant
 BEST_SCORE = 0
 while running:
     pygame.mixer.init()
@@ -369,7 +358,6 @@ while running:
         LIFES = lost(fps_cahnge)
         pygame.mixer.music.stop()
     else:
-
         SCORE = 0
         KOEF = 0.1
         fps_cahnge = 0
@@ -387,10 +375,6 @@ while running:
         pygame.init()
         pygame.mouse.set_visible(False)
         FONT = pygame.font.Font('Data/Mario_font.ttf', 15)
-        # pygame.mixer.init()
-        # sound = pygame.mixer.Sound('death_mob.wav')
-        # music = pygame.mixer.music.load('fon_music.mp3')
-        # pygame.mixer.music.play(-1)
         size = WIDTH, HEIGHT
         screen = pygame.display.set_mode(size)
         pygame.display.set_caption('Mario ultra 2021')
@@ -402,7 +386,6 @@ while running:
         reload_but = Reload(button_end_sprites)
         exit_but = Exit(button_end_sprites)
         mn = [reload_but, exit_but]
-
         all_sprites = pygame.sprite.Group()
         mario_sprites = pygame.sprite.Group()
         earth = pygame.sprite.Group()
@@ -413,20 +396,13 @@ while running:
         mario = Mario(20, 500, all_sprites)
         mario.potential_life = LIFES
         mob = Mob(mob_sprites)
-
-
-
         platform = MainPlatform(0, 580, True, LENTH)
         entities.add(platform)
         all_sprites.add(platform)
         bg = 100
         end = 305
         counter = 0
-
-        # Конец уровня - дерево
         finish = Finish(LENTH - 455, 298, clouds)
-
-        # Облака
         x_cloud = 0
         if LENTH == 50000:
             cloud = False
@@ -437,8 +413,6 @@ while running:
         while x_cloud <= LENTH:
             rrr = Clouds(x_cloud, cloud, clouds)
             x_cloud += z
-        # Конец облаков
-
         if LENTH == 5000:
             while end <= LENTH - 350:
                 x = random.randint(bg, end)
@@ -469,7 +443,6 @@ while running:
                 all_sprites.add(platform)
                 bg += 220
                 end += 650
-
         i = 0
         for ent in entities:
             i += 1
@@ -478,19 +451,19 @@ while running:
                 if LENTH <= 5000:
                     z = 3
                 elif LENTH == 30000:
-                    z = 18
+                    z = 16
                 elif LENTH >= 50000:
-                    z = 33
+                    z = 30
+                rec_len = (LENTH - 600) / z
                 for j in range(z):
-                    elemental = MobGumba(x + j * (LENTH - 600 / z) + 300, y, mob_sprites)
-                # spawn by main platform
+                    elemental = MobGumba(x + j * rec_len + 350, y, mob_sprites)
             else:
                 if i % 5 == 0:
                     elemental = MobGumba(x + 50, y, mob_sprites)
                 elif i % 11 == 0:
                     elemental = MobBonus(x, y, mob_sprites)
                 elif i % 8 == 0:
-                    elemental = MobMushroom(x, y + 3, mob_sprites)
+                    elemental = MobMushroom(x + random.randint(0, 40), y + 3, mob_sprites)
 
         mario.set_walls(entities)
         mario.set_group(mario_sprites)
