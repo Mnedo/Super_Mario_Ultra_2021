@@ -269,6 +269,7 @@ def lost(fps):
 
 def won(LENTH):
     pygame.init()
+    pygame.mouse.set_visible(True)
     FONT = pygame.font.Font('Data/Mario_font.ttf', 20)
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size)
@@ -358,6 +359,7 @@ while running:
     pygame.mixer.music.load('fon_music.mp3')
     der = True
     if LIFES == 0:
+        pygame.mouse.set_visible(True)
         if fps_cahnge == 0:
             for el in mn:
                 el.vekt = 0
@@ -367,6 +369,7 @@ while running:
         LIFES = lost(fps_cahnge)
         pygame.mixer.music.stop()
     else:
+
         SCORE = 0
         KOEF = 0.1
         fps_cahnge = 0
@@ -382,6 +385,7 @@ while running:
             KOEF = 1
         camera = Camera()
         pygame.init()
+        pygame.mouse.set_visible(False)
         FONT = pygame.font.Font('Data/Mario_font.ttf', 15)
         # pygame.mixer.init()
         # sound = pygame.mixer.Sound('death_mob.wav')
@@ -526,28 +530,10 @@ while running:
                 screen.blit(load_image("fon_level2.jpg"), (0, 0))
             elif LENTH >= 50000:
                 screen.blit(load_image("fon_level3.png"), (0, 0))
-            #filll text
-            font = FONT
-            text_coord = 614
-            intro_text = ["   XP"]
-            for line in intro_text:
-                string_rendered = font.render(line, 4, pygame.Color('red'))
-                intro_rect = string_rendered.get_rect()
-                intro_rect.top = 18
-                intro_rect.x = text_coord
-                text_coord += intro_rect.height
-                screen.blit(string_rendered, intro_rect)
-            text = round(SCORE)
-            pr = " " * len(str(text))
-            intro_text = [str(text), *pr,"SCORE"]
-            for line in intro_text:
-                string_rendered = font.render(line, 4, pygame.Color('gold'))
-                intro_rect = string_rendered.get_rect()
-                intro_rect.top = 51
-                intro_rect.x = text_coord - 30 - len(str(text)) * 15
-                text_coord += intro_rect.height
-                screen.blit(string_rendered, intro_rect)
-            #
+
+
+
+
 
 
             LIFES = mario.update_lifes()
@@ -574,7 +560,7 @@ while running:
             if actual_lenth >= LENTH - 500:
                 # пример урона
                 wons += 1
-                if BEST_SCORE == 0 or BEST_SCORE >= SCORE:
+                if BEST_SCORE == 0 or BEST_SCORE <= SCORE:
                     BEST_SCORE = SCORE
                 LENTH, LIFES = won(LENTH)
                 break
@@ -626,5 +612,25 @@ while running:
                 mario_sprites.draw(screen)
                 hearts_gp.draw(screen)
                 entities.draw(screen)
+                font = FONT
+                text_coord = 614
+                intro_text = ["   XP"]
+                for line in intro_text:
+                    string_rendered = font.render(line, 4, pygame.Color('red'))
+                    intro_rect = string_rendered.get_rect()
+                    intro_rect.top = 18
+                    intro_rect.x = text_coord
+                    text_coord += intro_rect.height
+                    screen.blit(string_rendered, intro_rect)
+                text = round(SCORE)
+                pr = " " * len(str(text))
+                intro_text = [str(text), *pr, "SCORE"]
+                for line in intro_text:
+                    string_rendered = font.render(line, 4, pygame.Color('gold'))
+                    intro_rect = string_rendered.get_rect()
+                    intro_rect.top = 51
+                    intro_rect.x = text_coord - 30 - len(str(text)) * 15
+                    text_coord += intro_rect.height
+                    screen.blit(string_rendered, intro_rect)
                 clock.tick(30)
                 pygame.display.flip()
