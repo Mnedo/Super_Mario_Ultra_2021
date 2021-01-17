@@ -9,8 +9,9 @@ from Objects import Mob, MobGumba, MobBonus, MobMushroom
 from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next, Finish, Clouds
 
 x_fin = 400
+
+
 class Camera:
-    # зададим начальный сдвиг камеры
     def __init__(self):
         self.dx = 0
         self.dy = 0
@@ -39,7 +40,6 @@ class Camera:
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
-    # если файл не существует, то выходим
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
@@ -262,7 +262,6 @@ def lost(fps):
     return 0
 
 
-
 def won(LENTH):
     pygame.init()
     image = load_image("mario_start.png")
@@ -468,7 +467,7 @@ while running:
                 if i % 5 == 0:
                     elemental = MobGumba(x + 50, y, mob_sprites)
                 elif i % 6 == 0:
-                    elemental = MobBonus(x, y, mob_sprites)
+                    elemental = MobBonus(x + random.randint(0, 30), y, mob_sprites)
                 elif i % 11 == 0:
                     elemental = MobMushroom(x + random.randint(10, 60), y + 3, mob_sprites)
 
@@ -502,7 +501,6 @@ while running:
                     if mario.moving:
                         mario.set_moving()
 
-
             screen.fill((0, 0, 0))
             if LENTH <= 5000:
                 screen.blit(load_image("fon_level1.png"), (0, 0))
@@ -510,11 +508,6 @@ while running:
                 screen.blit(load_image("fon_level2.jpg"), (0, 0))
             elif LENTH >= 50000:
                 screen.blit(load_image("fon_level3.png"), (0, 0))
-
-
-
-
-
 
             LIFES = mario.update_lifes()
             hearts_gp = pygame.sprite.Group()
@@ -538,7 +531,6 @@ while running:
                             camera.apply(sp)
 
             if actual_lenth >= LENTH - 500:
-                # пример урона
                 wons += 1
                 if BEST_SCORE == 0 or BEST_SCORE <= SCORE:
                     BEST_SCORE = SCORE

@@ -5,7 +5,6 @@ import pygame, os, sys
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
-    # если файл не существует, то выходим
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
@@ -319,7 +318,6 @@ class Finish(pygame.sprite.Sprite):
 
 class Clouds(pygame.sprite.Sprite):
     cloud_image = load_image("cloud.png")
-    #cloud_image = pygame.transform.scale(cloud_image, (300, 150))
     cloud_image = pygame.transform.scale(cloud_image, (250, 125))
     chert_image = load_image("chert.png")
     chert_image = pygame.transform.scale(chert_image, (250, 100))

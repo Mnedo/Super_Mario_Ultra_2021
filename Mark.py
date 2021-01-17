@@ -3,7 +3,6 @@ import pygame, os, sys
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
-    # если файл не существует, то выходим
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
@@ -210,10 +209,6 @@ class Mario(pygame.sprite.Sprite):
         pos_m_x, pos_m_y, m_coll = pos[0], pos[1], pos[2]
         if m_coll == 0 and pygame.sprite.collide_mask(self, mob) and self.damage == 0:
             self.coll = 1
-        # if self.coll == 1 and self.damage == 0:
-        #     self.damage = 1
-        #     return True
-        # return False
 
     def check_fall(self, mob):
         if pygame.sprite.collide_mask(self, mob):
