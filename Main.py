@@ -467,10 +467,10 @@ while running:
             else:
                 if i % 5 == 0:
                     elemental = MobGumba(x + 50, y, mob_sprites)
-                elif i % 11 == 0:
+                elif i % 6 == 0:
                     elemental = MobBonus(x, y, mob_sprites)
-                elif i % 8 == 0:
-                    elemental = MobMushroom(x + random.randint(0, 40), y + 3, mob_sprites)
+                elif i % 11 == 0:
+                    elemental = MobMushroom(x + random.randint(10, 60), y + 3, mob_sprites)
 
         mario.set_walls(entities)
         mario.set_group(mario_sprites)
