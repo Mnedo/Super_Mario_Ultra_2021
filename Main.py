@@ -265,6 +265,8 @@ def lost(fps):
 
 def won(LENTH):
     pygame.init()
+    image = load_image("mario_start.png")
+    pygame.display.set_icon(image)
     pygame.mouse.set_visible(True)
     FONT = pygame.font.Font('Data/Mario_font.ttf', 20)
     size = WIDTH, HEIGHT
@@ -338,8 +340,13 @@ def won(LENTH):
 
 
 BEST_SCORE = 0
+SCORE = 0
 while running:
     pygame.mixer.init()
+    if BEST_SCORE == 0 or BEST_SCORE <= SCORE:
+        BEST_SCORE = SCORE
+    image = load_image("mario_start.png")
+    pygame.display.set_icon(image)
     sound_mob_death = pygame.mixer.Sound('death_mob.wav')
     sound_mario_damage = pygame.mixer.Sound('mario_damage.mp3')
     sound_mario_losing = pygame.mixer.Sound('mario_losing.mp3')
