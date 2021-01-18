@@ -1,14 +1,10 @@
 import pygame
 from pygame import *
 
-WIN_WIDTH = 1300
-WIN_HEIGHT = 600
-DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
-
 
 class MainPlatform(sprite.Sprite):
     def __init__(self, x, y, flag, LENTH):
-        if LENTH == 5000:
+        if LENTH == 5000: # Цвет платформы в зависимости от уровня
             PLATFORM_COLOR = pygame.Color("#8FBC8F")
         elif LENTH == 30000:
             PLATFORM_COLOR = pygame.Color("#87CEEB")
@@ -16,7 +12,7 @@ class MainPlatform(sprite.Sprite):
             PLATFORM_COLOR = pygame.Color("#FF6347")
         if not flag:
             sprite.Sprite.__init__(self)
-            if LENTH <= 5000:
+            if LENTH <= 5000: # Длина платформ в зависимости от уровня
                 dl = 350
                 # dl = 204
             elif LENTH == 30000:

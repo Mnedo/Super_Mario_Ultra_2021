@@ -487,7 +487,7 @@ while running:  # основной код, где происходит все, �
                     pygame.quit()
                     sys.exit()
                     break
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN:  # Управление кнопками
                     if event.key == pygame.K_SPACE:
                         mario.start_jump()
                     elif event.key == pygame.K_LEFT:
@@ -520,7 +520,7 @@ while running:  # основной код, где происходит все, �
                     SCORE += camera.get_lent() * KOEF
             if mario.jumping:
                 SCORE += 0.1
-            if mario.moving and not mario.shoting:
+            if mario.moving and not mario.shoting: # обновление камеры, сдвиги экрана
                 camera.update([mario.vekt, mario.x])
                 for sp in entities:
                     camera.apply(sp)
