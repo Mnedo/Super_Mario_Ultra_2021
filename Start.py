@@ -1,6 +1,8 @@
 import random
 
-import pygame, os, sys
+import os
+import pygame
+import sys
 
 
 def load_image(name, colorkey=None):
@@ -12,32 +14,32 @@ def load_image(name, colorkey=None):
     return image
 
 
-class Info(pygame.sprite.Sprite):
+class Info(pygame.sprite.Sprite):  # кнопка "информация" на главном экране(слева)
     image1 = load_image("info.png")
     image2 = load_image("info1.png")
     imn = load_image("nothing.png")
 
     def __init__(self, *gr):
         super().__init__(gr)
-        self.image = Info.image1
+        self.image = Info.image1  # картинка
         self.rect = self.image.get_rect()
         self.rect.x = 480
         self.rect.y = 222
         self.vekt = 0
 
-    def is_on(self, x, y):
+    def is_on(self, x, y):  # реакция кнопки на наведение курсора на нее
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             self.vekt = 1
         else:
             self.vekt = 0
 
-    def click(self, x, y):
+    def click(self, x, y):  # нажатие
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             return True
 
-    def update(self):
+    def update(self):  # изменение при нажатии или наведении курсора на кнопку
         if self.vekt == 3:
             self.image = Info.imn
         elif self.vekt == 0:
@@ -46,7 +48,7 @@ class Info(pygame.sprite.Sprite):
             self.image = Info.image2
 
 
-class Settings(pygame.sprite.Sprite):
+class Settings(pygame.sprite.Sprite):  # кнопка, открывающая окно об авторах проекта
     image = load_image("settings.png")
     image1 = load_image("settings1.png")
     imn = load_image("nothing.png")
@@ -59,19 +61,19 @@ class Settings(pygame.sprite.Sprite):
         self.rect.y = 222
         self.vekt = 0
 
-    def is_on(self, x, y):
+    def is_on(self, x, y):  # реакция кнопки на наведение курсора на нее
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             self.vekt = 1
         else:
             self.vekt = 0
 
-    def click(self, x, y):
+    def click(self, x, y):  # нажатие
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             return True
 
-    def update(self):
+    def update(self):  # изменение при нажатии или наведении курсора на кнопку
         if self.vekt == 3:
             self.image = Settings.imn
         elif self.vekt == 0:
@@ -80,7 +82,7 @@ class Settings(pygame.sprite.Sprite):
             self.image = Settings.image1
 
 
-class Start(pygame.sprite.Sprite):
+class Start(pygame.sprite.Sprite):  # кнопка "старт", т.е. начало игры
     image = load_image("play.png")
     image1 = load_image("play1.png")
     imn = load_image("nothing.png")
@@ -93,19 +95,19 @@ class Start(pygame.sprite.Sprite):
         self.rect.y = 222
         self.vekt = 0
 
-    def is_on(self, x, y):
+    def is_on(self, x, y):  # реакция кнопки на наведение курсора на нее
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             self.vekt = 1
         else:
             self.vekt = 0
 
-    def click(self, x, y):
+    def click(self, x, y):  # нажатие
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             return True
 
-    def update(self):
+    def update(self):  # изменение при нажатии или наведении курсора на кнопку
         if self.vekt == 3:
             self.image = Start.imn
         elif self.vekt == 0:
@@ -114,13 +116,14 @@ class Start(pygame.sprite.Sprite):
             self.image = Start.image1
 
 
-class Match(pygame.sprite.Sprite):
+class Match(pygame.sprite.Sprite):  # спрайты, которые пользователь видит, когда выбирает уровень сложности
     image = load_image("match.png")
     imn = load_image("nothing.png")
     image1 = load_image("matched.png")
 
     def __init__(self, i, ln, *gr):
         super().__init__(gr)
+        # далее напротив выбранного уровня сменяется с пустого красного квадрата на красный квадрат с крестом
         if ln == 5000 and i == 1:
             self.image = Match.image1
         elif ln == 30000 and i == 2:
@@ -135,29 +138,29 @@ class Match(pygame.sprite.Sprite):
         self.i = i
         self.k = 0
 
-    def get_name(self):
+    def get_name(self):  # возвращает номер спрайта от 1 до 3(функция используется для расставления всех страйтов)
         return self.i
 
-    def set_gr(self, gr):
+    def set_gr(self, gr):  # добавление спрайта в группу
         gr.add(self)
 
-    def clear(self):
+    def clear(self):  # вернуться назад
         self.image = Match.imn
         self.k = 1
 
-    def click(self, x, y):
+    def click(self, x, y):  # нажатие
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             return 'done'
 
-    def set_dot(self):
+    def set_dot(self):  # смена пустого квадрата на квадрат с крестом
         self.image = Match.image1
 
-    def del_dot(self):
+    def del_dot(self):  # смена квадрата с крестом на пустой квадарат
         self.image = Match.image
 
 
-class Reload(pygame.sprite.Sprite):
+class Reload(pygame.sprite.Sprite):  # спрайт "играть заново" при проигрыше
     image = load_image("reload.png")
     image1 = load_image("reload1.png")
     imn = load_image("nothing.png")
@@ -170,19 +173,19 @@ class Reload(pygame.sprite.Sprite):
         self.rect.y = 400
         self.vekt = 3
 
-    def is_on(self, x, y):
+    def is_on(self, x, y):  # реакция кнопки на наведение курсора на нее
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             self.vekt = 1
         else:
             self.vekt = 0
 
-    def click(self, x, y):
+    def click(self, x, y):  # нажатие
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             return True
 
-    def update(self):
+    def update(self):  # изменение при нажатии или наведении курсора на кнопку
         if self.vekt == 3:
             self.image = Reload.imn
         elif self.vekt == 0:
@@ -191,7 +194,7 @@ class Reload(pygame.sprite.Sprite):
             self.image = Reload.image1
 
 
-class Exit(pygame.sprite.Sprite):
+class Exit(pygame.sprite.Sprite):  # кнопка "выйти" при проигрыше
     image = load_image("exit.png")
     image1 = load_image("exit1.png")
     imn = load_image("nothing.png")
@@ -204,19 +207,19 @@ class Exit(pygame.sprite.Sprite):
         self.rect.y = 400
         self.vekt = 3
 
-    def is_on(self, x, y):
+    def is_on(self, x, y):  # реакция кнопки на наведение курсора на нее
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             self.vekt = 1
         else:
             self.vekt = 0
 
-    def click(self, x, y):
+    def click(self, x, y):  # нажатие
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             return True
 
-    def update(self):
+    def update(self):  # изменение при нажатии или наведении курсора на кнопку
         if self.vekt == 3:
             self.image = Exit.imn
         elif self.vekt == 0:
@@ -225,7 +228,7 @@ class Exit(pygame.sprite.Sprite):
             self.image = Exit.image1
 
 
-class Heart(pygame.sprite.Sprite):
+class Heart(pygame.sprite.Sprite):  # сердца, или количество жизней, которые есть у Марио
     image = load_image("heart.png")
 
     def __init__(self, x, y, *gr):
@@ -236,7 +239,7 @@ class Heart(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-class Quit(pygame.sprite.Sprite):
+class Quit(pygame.sprite.Sprite):  # кнопка выхода из игры при победе
     image = load_image("onoff.png")
     image1 = load_image("onoff1.png")
     imn = load_image("nothing.png")
@@ -249,19 +252,19 @@ class Quit(pygame.sprite.Sprite):
         self.rect.y = 475
         self.vekt = 0
 
-    def is_on(self, x, y):
+    def is_on(self, x, y):  # реакция кнопки на наведение курсора на нее
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             self.vekt = 1
         else:
             self.vekt = 0
 
-    def click(self, x, y):
+    def click(self, x, y):  # нажатие
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             return True
 
-    def update(self):
+    def update(self):  # изменение при нажатии или наведении курсора на кнопку
         if self.vekt == 3:
             self.image = Quit.imn
         elif self.vekt == 0:
@@ -270,7 +273,7 @@ class Quit(pygame.sprite.Sprite):
             self.image = Quit.image1
 
 
-class Next(pygame.sprite.Sprite):
+class Next(pygame.sprite.Sprite):  # кнопка "продолжить играть"  после победы
     image = load_image("next.png")
     image1 = load_image("next1.png")
     imn = load_image("nothing.png")
@@ -283,19 +286,19 @@ class Next(pygame.sprite.Sprite):
         self.rect.y = 475
         self.vekt = 0
 
-    def is_on(self, x, y):
+    def is_on(self, x, y):  # реакция кнопки на наведение курсора на нее
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             self.vekt = 1
         else:
             self.vekt = 0
 
-    def click(self, x, y):
+    def click(self, x, y):  # нажатие
         if x in range(self.rect.x, self.rect.x + self.rect.w + 1) and y in range(self.rect.y,
                                                                                  self.rect.y + self.rect.h + 1):
             return True
 
-    def update(self):
+    def update(self):  # изменение при нажатии или наведении курсора на кнопку
         if self.vekt == 3:
             self.image = Next.imn
         elif self.vekt == 0:
@@ -323,13 +326,13 @@ class Clouds(pygame.sprite.Sprite):  # облака
     chert_image = pygame.transform.scale(chert_image, (250, 100))
 
     def __init__(self, cl, flag, *gr):
-        if flag:
+        if flag:  # облака на первом и втором уровнях
             super().__init__(gr)
             self.image = Clouds.cloud_image
             self.rect = self.image.get_rect()
             self.rect.x = cl
             self.rect.y = random.randint(0, 150)
-        else:
+        else:  # облака на третьем уровне
             super().__init__(gr)
             self.image = Clouds.chert_image
             self.rect = self.image.get_rect()

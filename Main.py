@@ -451,7 +451,7 @@ while running:  # основной код, где происходит все, �
                 bg += 220
                 end += 650
         i = 0
-        for ent in entities:  # формирование всех дполнтиельных героев
+        for ent in entities:  # формирование всех дополнительных героев с определенной периодичностью
             i += 1
             x, y = ent.rect.x, ent.rect.y
             if i == 1:
@@ -479,7 +479,7 @@ while running:  # основной код, где происходит все, �
         pygame.display.set_icon(image)
         old = 20
         if LIFES != 0:
-            pygame.mixer.music.play(-1)
+            pygame.mixer.music.play(-1)  # музыка на фоне
         while LIFES != 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -520,7 +520,7 @@ while running:  # основной код, где происходит все, �
                     SCORE += camera.get_lent() * KOEF
             if mario.jumping:
                 SCORE += 0.1
-            if mario.moving and not mario.shoting: # обновление камеры, сдвиги экрана
+            if mario.moving and not mario.shoting:  # обновление камеры, сдвиги экрана
                 camera.update([mario.vekt, mario.x])
                 for sp in entities:
                     camera.apply(sp)
@@ -538,6 +538,7 @@ while running:  # основной код, где происходит все, �
                 LENTH, LIFES = won(LENTH)
                 break
             else:
+                # здесь происходит то, что пользователь видит на экране - Марио, мобов, платформу и их движения
                 for mob in mob_sprites:
                     if mario.shoting and mario.last_sprite != mob:
                         mob.move()
