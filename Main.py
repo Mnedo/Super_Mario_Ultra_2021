@@ -11,7 +11,7 @@ from Start import Start, Settings, Info, Match, Reload, Exit, Heart, Quit, Next,
 x_fin = 400
 
 
-class Camera:
+class Camera:  # камера для движения поля
     def __init__(self):
         self.dx = 0
         self.dy = 0
@@ -48,15 +48,15 @@ def load_image(name, colorkey=None):
 
 
 LENTH = 5000
-LIFES = 3
-WIDTH, HEIGHT = 700, 600
+LIFES = 3  # количество жизней
+WIDTH, HEIGHT = 700, 600  # размер поля
 running = True
 FPS = 30
 fps_cahnge = 0
 wons = 0
 
 
-def start_screen(LENTH):
+def start_screen(LENTH):  # начальный экран + вкладка "авторы" + вкладка "выбор сложности"
     fon = pygame.transform.scale(load_image('start_screen.jpg'), (WIDTH, HEIGHT))
     pygame.init()
     writer = False
@@ -338,14 +338,15 @@ def won(LENTH):
         pygame.display.flip()
 
 
-BEST_SCORE = 0
-SCORE = 0
-while running:
-    pygame.mixer.init()
+BEST_SCORE = 0  # счет
+SCORE = 0  # счет
+while running:  # основной код, где происходит все, что видит пользователь
+    pygame.mixer.init()  # музыка
     if BEST_SCORE == 0 or BEST_SCORE <= SCORE:
         BEST_SCORE = SCORE
     image = load_image("mario_start.png")
     pygame.display.set_icon(image)
+    # далее музыка для каждого случая
     sound_mob_death = pygame.mixer.Sound('death_mob.wav')
     sound_mario_damage = pygame.mixer.Sound('mario_damage.mp3')
     sound_mario_losing = pygame.mixer.Sound('mario_losing.mp3')
@@ -450,7 +451,7 @@ while running:
                 bg += 220
                 end += 650
         i = 0
-        for ent in entities:
+        for ent in entities:  # формирование всех дполнтиельных героев
             i += 1
             x, y = ent.rect.x, ent.rect.y
             if i == 1:
@@ -510,7 +511,7 @@ while running:
                 screen.blit(load_image("fon_level3.png"), (0, 0))
 
             LIFES = mario.update_lifes()
-            hearts_gp = pygame.sprite.Group()
+            hearts_gp = pygame.sprite.Group()  # новая группа спрайтов
             for i in range(1, LIFES + 1):
                 heart = Heart(WIDTH - 40 - i * 40, 10, hearts_gp)
             if mario.moving and not mario.shoting:
@@ -546,7 +547,6 @@ while running:
                         if counter >= int(20000 * KOEF) and str(type(mob)) == "<class 'Objects.Mob'>":
                             counter = 0
                             mob.again()
-                        mario.fall(mob, mob.get_coords())
                         mob.fall(mario, mario.shoting, mario.get_coords())
                         if mob.killed and str(type(mob)) != "<class 'Objects.MobBonus'>":
                             if mob.snd:

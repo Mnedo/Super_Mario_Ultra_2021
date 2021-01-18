@@ -304,7 +304,7 @@ class Next(pygame.sprite.Sprite):
             self.image = Next.image1
 
 
-class Finish(pygame.sprite.Sprite):
+class Finish(pygame.sprite.Sprite):  # дерево и табличка в конце уровней
     image = load_image("Tree_fin.png")
     image = pygame.transform.scale(image, (300, 300))
 
@@ -316,7 +316,7 @@ class Finish(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-class Clouds(pygame.sprite.Sprite):
+class Clouds(pygame.sprite.Sprite):  # облака
     cloud_image = load_image("cloud.png")
     cloud_image = pygame.transform.scale(cloud_image, (250, 125))
     chert_image = load_image("chert.png")

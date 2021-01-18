@@ -10,7 +10,7 @@ def load_image(name, colorkey=None):
     return image
 
 
-class Mario(pygame.sprite.Sprite):
+class Mario(pygame.sprite.Sprite):  # класс главного игрока - Марио
     image_run1_r = load_image("mario_run1_r.png")
     image_run2_r = load_image("mario_run2_r.png")
     image_run1_l = load_image("mario_run1_l.png")
@@ -30,16 +30,16 @@ class Mario(pygame.sprite.Sprite):
     def __init__(self, x, y, *gr):
         super().__init__(gr)
         self.image = Mario.image_start
-        self.mask = pygame.mask.from_surface(self.image)
+        self.mask = pygame.mask.from_surface(self.image)  # маска спрайта
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.x = x
         self.y = y
-        self.jumping = False
+        self.jumping = False  # переменная для того, чтобы узнать,
         self.moving = False
         self.shoting = False
-        self.killed = False
+        self.killed = False  # переменная для того, чтобы узнать, умер ли Марио
         self.xod = 0
         self.xod_shot = 0
         self.vekt = 0
@@ -52,7 +52,9 @@ class Mario(pygame.sprite.Sprite):
         self.dash = 0
         self.mn = [400, 580]
         self.damage = [-15, -20, -20, -20, -20, -15, -15, -10, -10, -10, 15, 20, 20, 20, 20, 15, 15, 10, 0, 0]
-        self.damage_x = [-5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, 0, 0, 0, 0, 0, 0, 0, 0]
+        # траектория Марио при потери жизни
+        self.damage_x = [-5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, 0, 0, 0, 0, 0, 0, 0, 0]  # траектория Марио
+        # при потери жизни
         self.last_sprite = 0
 
     def set_walls(self, gr):
@@ -64,7 +66,7 @@ class Mario(pygame.sprite.Sprite):
     def set_lifes(self, live):
         self.lifes = live
 
-    def update(self):
+    def update(self):  # обновление спрайта
         if not self.shoting and not self.killed:
             if self.moving:
                 self.move_x(self.vekt)
@@ -110,7 +112,7 @@ class Mario(pygame.sprite.Sprite):
                         self.image = Mario.image_jump_r
             self.rect = self.rect.move(self.x - self.rect.x, self.y - self.rect.y)
 
-    def move_x(self, x):
+    def move_x(self, x):  # ход Марио
         self.xod += 1
         self.vekt = x
         if x == 1:
@@ -147,14 +149,13 @@ class Mario(pygame.sprite.Sprite):
         if pygame.sprite.spritecollideany(self, self.gr):
             if self.potential == 0:
                 self.potential = 225
-                # self.potential = 150
             else:
                 self.potential = 120
 
-    def get_coords(self):
+    def get_coords(self):  # возвращение нижнего левого угла Марио
         return [self.rect.x, self.rect.y + self.rect.w]
 
-    def damage_mario(self):
+    def damage_mario(self):  # функция нужна для того, чтобы обработать соприкосновение Марио и моба не по верху
         self.xod_shot += 1
         if self.xod_shot >= 20 and self.lifes != 0:
             self.shoting = False
@@ -203,12 +204,6 @@ class Mario(pygame.sprite.Sprite):
             return self.dash
         else:
             return 0
-
-    def fall(self, mob, pos):
-        # self.check, self.coll = 0, 0
-        pos_m_x, pos_m_y, m_coll = pos[0], pos[1], pos[2]
-        if m_coll == 0 and pygame.sprite.collide_mask(self, mob) and self.damage == 0:
-            self.coll = 1
 
     def check_fall(self, mob):
         if pygame.sprite.collide_mask(self, mob):
