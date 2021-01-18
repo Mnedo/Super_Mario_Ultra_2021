@@ -47,11 +47,11 @@ def load_image(name, colorkey=None):
     return image
 
 
-LENTH = 5000
+LENTH = 5000 # длина уровня по умолчанию
 LIFES = 3  # количество жизней
 WIDTH, HEIGHT = 700, 600  # размер поля
 running = True
-FPS = 30
+FPS = 30 # частота кадров
 fps_cahnge = 0
 wons = 0
 
@@ -201,7 +201,7 @@ def start_screen(LENTH):  # начальный экран + вкладка "ав
         clock.tick(30)
 
 
-def lost(fps):
+def lost(fps): # проигрыш
     pygame.init()
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size)
@@ -262,7 +262,7 @@ def lost(fps):
     return 0
 
 
-def won(LENTH):
+def won(LENTH): # Победа/Прохождение уровня
     pygame.init()
     image = load_image("mario_start.png")
     pygame.display.set_icon(image)
@@ -409,7 +409,7 @@ while running:  # основной код, где происходит все, �
         bg = 100
         end = 305
         counter = 0
-        finish = Finish(LENTH - 455, 298, clouds)
+        finish = Finish(LENTH - 455, 298, clouds) # дерево и табличка
         x_cloud = 0
         if LENTH == 50000:
             cloud = False
@@ -420,7 +420,7 @@ while running:  # основной код, где происходит все, �
         while x_cloud <= LENTH:
             rrr = Clouds(x_cloud, cloud, clouds)
             x_cloud += z
-        if LENTH == 5000:
+        if LENTH == 5000: # Генерация платформ
             while end <= LENTH - 350:
                 x = random.randint(bg, end)
                 y = 400
@@ -430,7 +430,7 @@ while running:  # основной код, где происходит все, �
                 all_sprites.add(platform)
                 bg += 360
                 end += 780
-        elif LENTH == 30000:
+        elif LENTH == 30000: # Генерация платформ
             while end <= LENTH - 200:
                 x = random.randint(bg, end)
                 y = 400
@@ -440,7 +440,7 @@ while running:  # основной код, где происходит все, �
                 all_sprites.add(platform)
                 bg += 290
                 end += 700
-        elif LENTH == 50000:
+        elif LENTH == 50000: # Генерация платформ
             while end <= LENTH - 200:
                 x = random.randint(bg, end)
                 y = 370
