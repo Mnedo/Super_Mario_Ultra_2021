@@ -28,46 +28,52 @@ class Mario(pygame.sprite.Sprite):  # класс главного игрока -
     image_dethr = load_image("image_dethr.png")
 
     def __init__(self, x, y, *gr):
+
         super().__init__(gr)
         self.image = Mario.image_start
         self.mask = pygame.mask.from_surface(self.image)  # маска спрайта
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.x = x
-        self.y = y
-        self.jumping = False  # переменная для того, чтобы узнать,
-        self.moving = False
-        self.shoting = False
+        self.rect.x = x  # x картинки
+        self.rect.y = y  # y картинки
+        self.x = x  # x mario
+        self.y = y  # y mario
+        self.jumping = False  # переменная для того, чтобы узнать, Прыгает ли Марио
+        self.moving = False  # переменная для того, чтобы узнать, двигается ли Марио
+        self.shoting = False  # переменная для того, чтобы узнать, получает ли урон Марио
         self.killed = False  # переменная для того, чтобы узнать, умер ли Марио
-        self.xod = 0
-        self.xod_shot = 0
-        self.vekt = 0
-        self.gr = []
-        self.zn = False
-        self.last_res = True
-        self.potential = 0
-        self.potential_life = 0
-        self.lifes = 0
-        self.dash = 0
-        self.mn = [400, 580]
+        self.xod = 0  # переменная, отвечающая за анимацию марио при ходьбе
+        self.xod_shot = 0  # переменная, отвечающая за анимацию марио при получении урона
+        self.vekt = 0  # определяет направление, куда бежит марио
+        self.gr = []  # инициализация для группы спрайтов
+        self.zn = False  # логическая пременная
+        self.last_res = True  # последний результат bool
+        self.potential = 0  # потенциал прыжка в пикселеях
+        self.potential_life = 0  # потенциал жизней
+        self.lifes = 0  # жизни марио
+        self.dash = 0  # сдвиг по камере, если X < 0
+        self.mn = [400, 580]  # возможные высоты платформ
         self.damage = [-15, -20, -20, -20, -20, -15, -15, -10, -10, -10, 15, 20, 20, 20, 20, 15, 15, 10, 0, 0]
-        # траектория Марио при потери жизни
+        # траектория Марио при потери жизни по y
         self.damage_x = [-5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, 0, 0, 0, 0, 0, 0, 0, 0]  # траектория Марио
-        # при потери жизни
+        # при потери жизни по x
         self.last_sprite = 0
+        # инциализация под последнего спрайта
 
     def set_walls(self, gr):
+        # задается группа платформ для марио
         self.gr = gr
 
     def set_group(self, gr):
+        # добавляется элемент в группу ( при доп инициализации)
         gr.add(self)
 
     def set_lifes(self, live):
+        # инциализация жизней
         self.lifes = live
 
-    def update(self):  # обновление спрайта
+    def update(self):  # обновление спрайта в зависимости от совершенных действий
         if not self.shoting and not self.killed:
+            # отрисовка по x
             if self.moving:
                 self.move_x(self.vekt)
             else:
@@ -76,7 +82,7 @@ class Mario(pygame.sprite.Sprite):  # класс главного игрока -
                         self.image = Mario.image_stay_l
                     else:
                         self.image = Mario.image_stay_r
-
+            # отрисовка прыжка ниже
             if not pygame.sprite.spritecollideany(self, self.gr) and self.potential == 0:
                 self.jumping = True
                 self.y += 15
@@ -112,7 +118,7 @@ class Mario(pygame.sprite.Sprite):  # класс главного игрока -
                         self.image = Mario.image_jump_r
             self.rect = self.rect.move(self.x - self.rect.x, self.y - self.rect.y)
 
-    def move_x(self, x):  # ход Марио
+    def move_x(self, x):  # ход Марио по x
         self.xod += 1
         self.vekt = x
         if x == 1:
@@ -135,7 +141,7 @@ class Mario(pygame.sprite.Sprite):  # класс главного игрока -
             else:
                 self.image = Mario.image_run2_l
 
-    def set_moving(self):
+    def set_moving(self):  # изменение состояния перемещения марио
         if self.moving:
             self.moving = False
             if self.vekt == -1:
@@ -145,7 +151,7 @@ class Mario(pygame.sprite.Sprite):  # класс главного игрока -
         else:
             self.moving = True
 
-    def start_jump(self):
+    def start_jump(self):  # инициализация прыжка
         if pygame.sprite.spritecollideany(self, self.gr):
             if self.potential == 0:
                 self.potential = 225
@@ -155,7 +161,9 @@ class Mario(pygame.sprite.Sprite):  # класс главного игрока -
     def get_coords(self):  # возвращение нижнего левого угла Марио
         return [self.rect.x, self.rect.y + self.rect.w]
 
-    def damage_mario(self):  # функция нужна для того, чтобы обработать соприкосновение Марио и моба не по верху
+    def damage_mario(
+            self):  # функция нужна для того, чтобы обработать соприкосновение Марио и моба не по верху; отрисовка анимации
+
         self.xod_shot += 1
         if self.xod_shot >= 20 and self.lifes != 0:
             self.shoting = False
@@ -197,23 +205,28 @@ class Mario(pygame.sprite.Sprite):  # класс главного игрока -
             self.y = self.rect.y
 
     def update_lifes(self):
+        # обновляет жизни в Main.py
         return self.lifes
 
     def get_dash(self):
+        # возвращает перемщение по камере
         if self.moving:
             return self.dash
         else:
             return 0
 
     def check_fall(self, mob):
+        # проверка соприкомновения
         if pygame.sprite.collide_mask(self, mob):
             return True
         return False
 
     def return_shot(self):
+        # возвращает shooting
         return self.shoting
 
     def if_kill(self):
+        # логика при смерти
         self.damage = 0
 
 
